@@ -27,8 +27,6 @@
                     </a>
                     <ul aria-expanded="false">
                         <li><a href="{{ route('tenant.setup.app') }}">{{ __('Config')}}</a></li>
-                    </ul>
-                    <ul aria-expanded="false">
                         <li><a href="{{ route('tenant.locations.index') }}">Localizações</a></li>
                     </ul>
                 </li>
