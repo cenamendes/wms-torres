@@ -138,7 +138,7 @@ class ShowRececaoDetail extends Component
 
          return to_route('tenant.encomendas.rececao.detail', $this->encomenda)
          ->with('message', 'Quantidade alterada com sucesso')
-         ->with('status', 'sucess');
+         ->with('status', 'success');
 
     }
 

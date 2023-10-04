@@ -3,11 +3,11 @@
 
        <div id="accordion-one" class="accordion accordion-primary" wire:ignore>
         <div class="accordion__item">
-            <div class="accordion__header rounded-lg collapsed" data-toggle="collapse" data-target="#default_collapseOne" aria-expanded="false">
+            <div class="accordion__header rounded-lg show" data-toggle="collapse" data-target="#default_collapseOne" aria-expanded="true">
                 <span class="accordion__header--text">Adicionar ao Stock</span>
                 <span class="accordion__header--indicator"></span>
             </div>
-            <div id="default_collapseOne" class="accordion__body collapse" data-parent="#accordion-one">
+            <div id="default_collapseOne" class="accordion__body collapse show" data-parent="#accordion-one">
                 <div class="accordion__body--text">
                     <div class="col-12" style="margin-bottom:25px;padding-left:0px;">
                         <div class="row">
