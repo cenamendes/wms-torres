@@ -29,6 +29,13 @@ class EncomendasRepository implements EncomendasInterface
         return $types;
     }
 
+    public function getLocalizacoes($perPage): LengthAwarePaginator
+    {
+        $types = Encomendas::paginate($perPage);
+
+        return $types;
+    }
+
    
 
 }

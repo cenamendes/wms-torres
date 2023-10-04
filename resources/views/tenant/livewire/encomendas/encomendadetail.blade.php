@@ -1,4 +1,51 @@
 
+       <!-- Inicio do Filtro  -->
+
+       <div id="accordion-one" class="accordion accordion-primary" wire:ignore>
+        <div class="accordion__item">
+            <div class="accordion__header rounded-lg collapsed" data-toggle="collapse" data-target="#default_collapseOne" aria-expanded="false">
+                <span class="accordion__header--text">Adicionar ao Stock</span>
+                <span class="accordion__header--indicator"></span>
+            </div>
+            <div id="default_collapseOne" class="accordion__body collapse" data-parent="#accordion-one">
+                <div class="accordion__body--text">
+                    <div class="col-12" style="margin-bottom:25px;padding-left:0px;">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label>{{__("Codigo de Barras")}}</label>
+                                    <input type="text" id="cod_barras" class="form-control" wire:model="codbarras">
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label>{{__("Descrição")}}</label>
+                                    <input type="text" id="descricao" class="form-control" wire:model.defer="descricao" readonly>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label>{{__("Quantidade")}}</label>
+                                    <input type="number" id="qtd" class="form-control" wire:model.defer="qtd" value="1">
+                                </div>
+                            </div>
+                        </div>
+                                    
+                        <div class="row">
+                            <div class="col-md-12 text-right">
+                                <button type="button" id="guardaStock" wire:click="guardaStock" class="btn-sm btn btn-primary">Guardar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- Fim do Filtro -->  
+
 <div class="table-responsive" wire:key="tenantcustomersshow">
    
   <div id="ajaxLoading" wire:loading.flex class="w-100 h-100 flex "
@@ -38,7 +85,6 @@
                 <th style="padding-bottom: 10px;">Referencia</th>
                 <th style="padding-bottom: 10px;">Designacao</th>
                 <th style="padding-bottom: 10px;">QTD</th>
-                <th style="padding-bottom: 10px;">Preco</th>
             </tr>
         </thead>
         <tbody>
@@ -48,15 +94,11 @@
                         <td style="padding-bottom:30px;"><br><span>{{ $info->referencias }}</span></td>
                         <td style="padding-bottom:30px;"><br><span style="padding-right: 5px;padding-left: 5px;">{{ $info->designacoes }}</span></td>
                         <td style="padding-bottom:30px;"><br><span style="padding-right: 5px;padding-left: 5px;">{{ $info->qtd }}</span></td>
-                        <td style="padding-bottom:30px;"><br><span style="padding-right: 5px;padding-left: 5px;">{{ $info->preco }}</span></td>
                     </tr>
                 @endforeach
             @endforeach
         </tbody>
     </table>
-    <div class="row" style="display:flex;justify-content:end;padding-right:15px;margin-top:10px;">
-        <h4>Preço Final: {{$encomendaDetail[0]->preco_final}}€</h4>
-    </div>
 {{-- </div> --}}
 {{ $encomendaDetail->links() }}
 </div>

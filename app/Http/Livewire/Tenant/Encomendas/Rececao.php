@@ -167,6 +167,7 @@ class Rececao extends Component
                     "referencias" => $item->product_code,
                     "designacoes" => $item->description,
                     "qtd" => $item->quantity,
+                    "qtdrececionada" => $item->quantity,
                     "preco" => (float)$item->total_amount/$item->quantity
                 ];
             }

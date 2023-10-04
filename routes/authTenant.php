@@ -13,7 +13,7 @@ use App\Http\Controllers\Tenant\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Tenant\Auth\ConfirmablePasswordController;
 use App\Http\Controllers\Tenant\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Tenant\Auth\EmailVerificationPromptController;
-
+use App\Http\Controllers\Tenant\Localizacoes\LocalizacoesController;
 
 /**** ROTAS ANTES DO LOGIN ********/
 
@@ -107,6 +107,19 @@ Route::middleware(['auth', 'cmsSettings'])->group(function () {
      
         Route::get('config', [ConfigController::class, 'index'])
             ->name('tenant.setup.app');
+
+        // Route::delete('locations/{id}', [LocalizacoesController::class, 'delete'])
+        //     ->name('tenant.localizacoes.delete');    
+        // Route::post('locations/store', [LocalizacoesController::class, 'store'])
+        //     ->name('tenant.localizacoes.store');
+        // Route::get('locations/create', [LocalizacoesController::class, 'create'])
+        //     ->name('tenant.localizacoes.create');
+        // Route::get('locations', [LocalizacoesController::class, 'index'])
+        //     ->name('tenant.localizacoes.index');
+
+        Route::resource('locations', LocalizacoesController::class, [
+                'as' => 'tenant'
+        ]);
 
     });
 
