@@ -128,6 +128,12 @@ class ShowRececaoDetail extends Component
                 "linhas_encomenda" => json_encode($array)
             ]);
         }
+        else 
+        {
+            return to_route('tenant.encomendas.rececao.detail', $this->encomenda)
+            ->with('message', 'Tem de adicionar uma referência existente!')
+            ->with('status', 'error');
+        }
 
 
          return to_route('tenant.encomendas.rececao.detail', $this->encomenda)
