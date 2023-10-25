@@ -17,7 +17,8 @@ class EditConfig extends Component
     use WithFileUploads;
 
     public string $homePanel = 'show active';
-    public string $emailPanel = '';
+    // public string $emailPanel = '';
+    public string $pickPanel = '';
     public string $cancelButton = '';
     public string $actionButton = '';
 
@@ -45,6 +46,10 @@ class EditConfig extends Component
     public int $count = 0;
 
     public ?array $emailsStored = [];
+
+    //Parte da pickagem
+    public ?int $cod_barras_pick;
+    public ?int $reference_pick;
 
     /**
      * Initialize livewire component
@@ -78,6 +83,9 @@ class EditConfig extends Component
            // $this->alert_email = $this->config->alert_email;
         }
 
+        $this->cod_barras_pick = $this->config->cod_barras_accept;
+        $this->reference_pick = $this->config->reference_accept;
+
         if(json_decode($this->config->alert_email) != null)
         {
             foreach(json_decode($this->config->alert_email) as $count => $fl)
@@ -95,68 +103,33 @@ class EditConfig extends Component
     public function updatedCompany_name()
     {
         $this->homePanel = 'show active';
-        $this->emailPanel = '';
+        $this->pickPanel = '';
     }
 
     public function updatedVat()
     {
         $this->homePanel = 'show active';
-        $this->emailPanel = '';
+        $this->pickPanel = '';
     }
 
     public function updatedContact()
     {
         $this->homePanel = 'show active';
-        $this->emailPanel = '';
+        $this->pickPanel = '';
     }
 
     public function updatedEmail()
     {
         $this->homePanel = 'show active';
-        $this->emailPanel = '';
+        $this->pickPanel = '';
     }
 
     public function updatedAddress()
     {
         $this->homePanel = 'show active';
-        $this->emailPanel = '';
+        $this->pickPanel = '';
     }
 
-    public function updatedSenderEmail()
-    {
-        $this->homePanel = '';
-        $this->emailPanel = 'show active';
-    }
-
-    public function updatedSenderName()
-    {
-        $this->homePanel = '';
-        $this->emailPanel = 'show active';
-    }
-
-    public function updatedSender_cc_email()
-    {
-        $this->homePanel = '';
-        $this->emailPanel = 'show active';
-    }
-
-    public function updatedSender_cc_name()
-    {
-        $this->homePanel = '';
-        $this->emailPanel = 'show active';
-    }
-
-    public function updatedSender_bcc_email()
-    {
-        $this->homePanel = '';
-        $this->emailPanel = 'show active';
-    }
-
-    public function updatedSender_bcc_name()
-    {
-        $this->homePanel = '';
-        $this->emailPanel = 'show active';
-    }
 
     public function updatedUploadFile()
     {
@@ -213,6 +186,7 @@ class EditConfig extends Component
             return;
         }
 
+
         $c['company_name'] =  $this->company_name;
         $c['vat'] =  $this->vat;
         $c['contact'] =  $this->contact;
@@ -228,6 +202,15 @@ class EditConfig extends Component
         $c['signature'] =  $this->signature;
         //$c['alert_email'] = $this->alert_email;
         $c['alert_email'] = json_encode($this->emailsStored);
+
+        if($this->cod_barras_pick == 0 && $this->reference_pick == 0)
+        {
+            $this->cod_barras_pick = 1;
+        }
+        
+        $c['cod_barras_accept'] = $this->cod_barras_pick;
+        $c['reference_accept'] = $this->reference_pick;
+
         if($this->config === NULL) {
             Config::create($c);
         } else {

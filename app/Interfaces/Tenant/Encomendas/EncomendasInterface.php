@@ -3,7 +3,7 @@
 namespace App\Interfaces\Tenant\Encomendas;
 
 use Illuminate\Pagination\LengthAwarePaginator;
-
+use Illuminate\Support\Collection;
 
 interface EncomendasInterface
 {
@@ -21,7 +21,13 @@ interface EncomendasInterface
 
     public function encomendaDetail($nr_encomenda,$perPage): LengthAwarePaginator;
 
+    public function encomendaDetailAll($nr_encomenda): Collection;
+
+    public function encomendaMovimentos($nr_encomenda,$perPage): LengthAwarePaginator;
+
     /******** */
+
+    public function getCodBarras($reference): object;
 
 
 }

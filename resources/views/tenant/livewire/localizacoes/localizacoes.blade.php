@@ -73,7 +73,7 @@
                             <div class="dropdown-menu dropdown-menu-right">
                                 <a class="dropdown-item"
                                     href="{{ route('tenant.locations.edit', $local->id) }}">Editar Localização</a>
-                                    <button class="dropdown-item btn-sweet-alert" data-type="form"
+                                    {{-- <button class="dropdown-item btn-sweet-alert" data-type="form"
                                         data-route="{{ route('tenant.locations.destroy', $local->id) }}"
                                         data-style="warning" data-csrf="csrf"
                                         data-text="{{ __('Quer eliminar esta localização?') }}"
@@ -81,7 +81,7 @@
                                         data-btn-cancel="{{ __('No, cancel it!!') }}"
                                         data-btn-ok="{{ __('Yes, delete it!!') }}" data-method="DELETE">
                                         {{ __('Eliminar localização') }}
-                                    </button>
+                                    </button> --}}
                             </div>
                         </div>
                     </td>

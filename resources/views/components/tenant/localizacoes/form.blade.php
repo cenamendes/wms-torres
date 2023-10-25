@@ -30,6 +30,11 @@
                                     <input type="text" name="abreviatura" id="abreviatura" @if(isset($abreviatura)) value="{{$abreviatura}}" @endif class="form-control"
                                         placeholder="{{ __('Abreviatura') }}">
                                 </section>
+                                <section class="col-xl-12 col-xs-12">
+                                    <label>{{ __('Relativo a Stock') }} </label>&nbsp;
+                                 
+                                    <input type="checkbox" name="local_stock" id="local_stock" @if(isset($abreviatura)) @if($localstock == "1") checked @endif @endif>
+                                </section>
                             </div>
                         </div>
                 </div>

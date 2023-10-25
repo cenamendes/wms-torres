@@ -1,4 +1,4 @@
-<x-tenant-layout title="Nova Entidade" :themeAction="$themeAction">
+<x-tenant-layout title="Nova Localização" :themeAction="$themeAction">
     <div class="container-fluid">
         <div class="page-titles">
             <ol class="breadcrumb">

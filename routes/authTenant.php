@@ -8,12 +8,16 @@ use App\Http\Controllers\Tenant\Profile\ProfileController;
 use App\Http\Controllers\Tenant\Auth\NewPasswordController;
 use App\Http\Controllers\Tenant\Auth\VerifyEmailController;
 use App\Http\Controllers\Tenant\Auth\RegisteredUserController;
+use App\Http\Controllers\Tenant\Arrumacoes\ArrumacoesController;
+use App\Http\Controllers\Tenant\Devolucoes\DevolucoesController;
 use App\Http\Controllers\Tenant\Encomendas\EncomendasController;
+use App\Http\Controllers\Tenant\Separacoes\SeparacoesController;
 use App\Http\Controllers\Tenant\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Tenant\Auth\ConfirmablePasswordController;
 use App\Http\Controllers\Tenant\Auth\AuthenticatedSessionController;
-use App\Http\Controllers\Tenant\Auth\EmailVerificationPromptController;
 use App\Http\Controllers\Tenant\Localizacoes\LocalizacoesController;
+use App\Http\Controllers\Tenant\Auth\EmailVerificationPromptController;
+use App\Http\Controllers\Tenant\Transferencias\TransferenciasController;
 
 /**** ROTAS ANTES DO LOGIN ********/
 
@@ -99,6 +103,33 @@ Route::middleware(['auth', 'cmsSettings'])->group(function () {
     ]);
 
     /**** FIM DAS ROTAS DE PERFIL ****/
+
+    /*** ROTAS DAS ARRUMAÇÕES ***/
+
+    Route::get('arrumacoes/encomenda',[ArrumacoesController::class,'detailEncomendaArrumacao'])->name('tenant.arrumacoes.encomenda.detail');
+    Route::get('arrumacoes/encomendas', [ArrumacoesController::class,'index'])->name('tenant.arrumacoes.index');
+
+    /************** */
+
+    /*** ROTAS DAS DEVOLUÇÕES ***/
+
+    Route::get('devolucoes/encomendas', [DevolucoesController::class,'index'])->name('tenant.devolucoes.index');
+
+
+    /************** */
+
+    /*** ROTAS DAS SEPARACOES ***/
+
+    Route::get('separacoes/encomenda/{numero_encomenda}',[SeparacoesController::class,'detailEncomendaSeparacao'])->name('tenant.separacoes.encomenda.detail');
+    Route::get('separacoes/encomendas', [SeparacoesController::class,'index'])->name('tenant.separacoes.index');
+
+    /************** */
+
+    /*** ROTAS DE TRANSFERÊNCIAS ***/
+
+    Route::get('transferencias',[TransferenciasController::class,'index'])->name('tenant.transferencia.index');
+
+    /*************** */
   
 
     /**** ROTAS DA PARTE DE CONFIGURAÇÃO ****/
@@ -116,6 +147,8 @@ Route::middleware(['auth', 'cmsSettings'])->group(function () {
         //     ->name('tenant.localizacoes.create');
         // Route::get('locations', [LocalizacoesController::class, 'index'])
         //     ->name('tenant.localizacoes.index');
+
+        Route::get('locations/order', [LocalizacoesController::class,'order'])->name('tenant.locations.order');
 
         Route::resource('locations', LocalizacoesController::class, [
                 'as' => 'tenant'

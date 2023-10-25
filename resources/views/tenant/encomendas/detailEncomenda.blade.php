@@ -29,3 +29,38 @@
         </div>
     </div>
 </x-tenant-layout>
+<script>
+
+    window.addEventListener('terminarStock',function(e){
+        
+        swal.fire({
+            title: e.detail.title,
+            html: e.detail.message,
+            type: e.detail.status,
+            showCancelButton: true,
+            confirmButtonColor: 'green',
+            confirmButtonText: "Finalizar",
+            cancelButtonText: "Cancelar",
+
+            onOpen: function() {
+
+                jQuery("body").on("click","#btnLoc", function(){
+                    Livewire.emit('removeDosTemporariosRececao',jQuery(this).attr("data-mov"));
+                });
+
+            }
+        })
+        
+        .then((result) => {
+            if(result.value) {
+
+                
+                Livewire.emit('EnviarMovimentosPrincipalRececao');
+                
+               
+            }
+        });
+           
+    });
+    
+</script>

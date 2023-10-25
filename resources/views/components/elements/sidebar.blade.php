@@ -22,12 +22,49 @@
                 </li>
 
                 <li><a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
+                    <i class="fa-solid fa-dolly"></i>
+                    <span class="nav-text">Arrumações</span>
+                    </a>
+                    <ul aria-expanded="false">
+                       <li><a href="{{ route('tenant.arrumacoes.index') }}">{{ __('Arrumações') }}</a></li>
+                    </ul>
+                </li>
+
+                <li><a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
+                    <i class="fa-solid fa-right-left"></i>
+                    <span class="nav-text">Devoluções</span>
+                    </a>
+                    <ul aria-expanded="false">
+                       <li><a href="{{ route('tenant.devolucoes.index') }}">{{ __('Devoluções') }}</a></li>
+                    </ul>
+                </li>
+
+                <li><a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
+                    <i class="fa-solid fa-people-carry-box"></i>
+                    <span class="nav-text">Separar Encomendas</span>
+                    </a>
+                    <ul aria-expanded="false">
+                       <li><a href="{{ route('tenant.separacoes.index') }}">{{ __('Separação') }}</a></li>
+                    </ul>
+                </li>
+
+                <li><a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
+                    <i class="fa-solid fa-boxes-stacked"></i>
+                    <span class="nav-text">Transferências</span>
+                    </a>
+                    <ul aria-expanded="false">
+                       <li><a href="{{ route('tenant.transferencia.index') }}">{{ __('Transferências') }}</a></li>
+                    </ul>
+                </li>
+
+                <li><a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
                         <i class="fa-solid fa-gear"></i>
                         <span class="nav-text">{{ __('Setup') }}</span>
                     </a>
                     <ul aria-expanded="false">
                         <li><a href="{{ route('tenant.setup.app') }}">{{ __('Config')}}</a></li>
                         <li><a href="{{ route('tenant.locations.index') }}">Localizações</a></li>
+                        <li><a href="{{ route('tenant.locations.order') }}">Ordem Localizações</a></li>
                     </ul>
                 </li>
             @endif

@@ -1,4 +1,4 @@
-<x-tenant-layout title="Nova Entidade" :themeAction="$themeAction">
+<x-tenant-layout title="Editar Localização" :themeAction="$themeAction">
     <div class="container-fluid">
         <div class="page-titles">
             <ol class="breadcrumb">
@@ -15,7 +15,7 @@
             <div class="tab-content">
                 <div class="tab-pane fade show active" id="home" role="tabpanel">
                     <div>
-                        <x-tenant.localizacoes.form :action="route('tenant.locations.update',$loc)" :update="true" :id="$loc" :codbarras="$codbarras" :descricao="$descricao" :abreviatura="$abreviatura" buttonAction="Editar Localização" formTitle="{{ __('Create Location') }}"/>
+                        <x-tenant.localizacoes.form :action="route('tenant.locations.update',$loc)" :update="true" :id="$loc" :codbarras="$codbarras" :descricao="$descricao" :abreviatura="$abreviatura" :localstock="$localstock" buttonAction="Editar Localização" formTitle="{{ __('Create Location') }}"/>
                     </div>
                 </div>
             </div>

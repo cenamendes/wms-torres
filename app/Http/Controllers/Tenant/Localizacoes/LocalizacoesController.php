@@ -36,6 +36,15 @@ class LocalizacoesController extends Controller
         ]);
     }
 
+    public function order(): View
+    {
+        return view('tenant.localizacoes.order', [
+            'themeAction' => 'uc_nestable',
+            'status' => session('status'),
+            'message' => session('message'),
+        ]);
+    }
+
     public function create(): View
     {
         $themeAction = 'form_element';
@@ -51,9 +60,10 @@ class LocalizacoesController extends Controller
         $cod_barras = $response->cod_barras;
         $descricao = $response->descricao;
         $abreviatura = $response->abreviatura;
+        $local_stock = $response->local_stock;
 
 
-        return view('tenant.localizacoes.edit',["themeAction" => $themeAction, "loc" => $id, "codbarras" => $cod_barras, "descricao" => $descricao, "abreviatura" => $abreviatura]);
+        return view('tenant.localizacoes.edit',["themeAction" => $themeAction, "loc" => $id, "codbarras" => $cod_barras, "descricao" => $descricao, "abreviatura" => $abreviatura, "localstock" => $local_stock]);
     }
 
     public function store(LocalizacoesFormRequest $request) : RedirectResponse

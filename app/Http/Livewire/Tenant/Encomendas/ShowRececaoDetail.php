@@ -4,17 +4,22 @@ namespace App\Http\Livewire\Tenant\Encomendas;
 
 use Livewire\Component;
 use Livewire\WithPagination;
+use App\Models\Tenant\Config;
 use Livewire\WithFileUploads;
 use App\Models\Tenant\Encomendas;
-use App\Interfaces\Tenant\Encomendas\EncomendasInterface;
+use App\Models\Tenant\Localizacoes;
 use Illuminate\Support\Facades\View;
+use App\Models\Tenant\MovimentosStock;
+use App\Models\Tenant\MovimentosStockTemporary;
+use PhpOffice\PhpSpreadsheet\Calculation\MathTrig\Sum;
+use App\Interfaces\Tenant\Encomendas\EncomendasInterface;
 
 class ShowRececaoDetail extends Component
 {
     use WithPagination;
     use WithFileUploads;
 
-    //protected $listeners = ["ReceiveImage" => "ReceiveImage"];
+    protected $listeners = ["removeDosTemporariosRececao" => "removeDosTemporariosRececao", "EnviarMovimentosPrincipalRececao" => "EnviarMovimentosPrincipalRececao"];
     
     public int $perPage;
     
@@ -22,6 +27,7 @@ class ShowRececaoDetail extends Component
 
     /**Detail */
     public string $encomenda = '';
+    public string $stringEncomenda = '';
     /*** */
 
     /**Reduz stock **/
@@ -50,6 +56,56 @@ class ShowRececaoDetail extends Component
         $this->encomenda = $encomenda;
 
         $this->qtd = 1;
+
+        $encomenda = $this->encomendaRepository->encomendaDetailAll($this->encomenda);
+
+
+        //FAZ ESTA SITUAÇÃO PARA VERIFICAR QUANTAS LINHAS EXISTEM NESTA ENCOMENDA
+        $countHowManyInThisEncomenda = 0;
+
+        foreach($encomenda as $enc)
+        {
+            foreach(json_decode($enc->linhas_encomenda) as $line)
+            {
+                $countHowManyInThisEncomenda++;
+            }
+            $this->stringEncomenda = $enc->numero_encomenda."|".$enc->nif_fornecedor;
+        }
+
+        //COMPARA COM O QUE TENHO EM STOCK TEMPORARIO DESTA ENCOMENDA
+        $checkIfExist = MovimentosStockTemporary::where('nr_encomenda',$enc->numero_encomenda."|".$enc->nif_fornecedor)->get();
+
+        
+
+
+        if(count($checkIfExist) < $countHowManyInThisEncomenda)
+        {
+            foreach($encomenda as $enc)
+            {
+                foreach(json_decode($enc->linhas_encomenda) as $line)
+                {
+                    $enc = Encomendas::where('id',$this->encomenda)->first();
+                    // $checkIfExist = MovimentosStockTemporary::where('nr_encomenda',$enc->numero_encomenda."|".$enc->nif_fornecedor)->first();
+    
+                    $this->stringEncomenda = $enc->numero_encomenda."|".$enc->nif_fornecedor;
+    
+                   
+                        MovimentosStockTemporary::create([
+                            "id_movimento" => $this->generateRandomString(8),
+                            "nr_encomenda" => $enc->numero_encomenda."|".$enc->nif_fornecedor,
+                            "cod_barras" => $line->cod_barras,
+                            "reference" => $line->referencias,
+                            "qtd_inicial" => $line->qtd,
+                            "qtd_separada" => 0,
+                            "tipo" => "Entrada",
+                            "localizacao" => 1
+                        ]);
+                    
+                }
+            }
+        }
+
+        
     }
 
 
@@ -66,11 +122,38 @@ class ShowRececaoDetail extends Component
 
     public function updatedCodbarras()
     {
-        $response = Encomendas::where('id',$this->encomenda)->first();
+        $config = Config::first();
 
-        foreach(json_decode($response->linhas_encomenda) as $lin)
+        if($config->cod_barras_accept == 0 && $config->reference_accept == 1)
         {
-            if($lin->referencias == $this->codbarras)
+            $response = MovimentosStockTemporary::Where('reference',$this->codbarras)->first();
+        }
+        else if($config->cod_barras_accept == 1 && $config->reference_accept == 0)
+        {
+            $response = MovimentosStockTemporary::where('cod_barras',$this->codbarras)->first();
+
+            if($response == null)
+            {
+                $response = MovimentosStockTemporary::where('reference',$this->codbarras)->first();
+            }
+        }
+        else 
+        {
+            $response = MovimentosStockTemporary::where('cod_barras',$this->codbarras)->orWhere('reference',$this->codbarras)->first();
+        }
+       
+
+        $encomendas = Encomendas::where('id',$this->encomenda)->first();
+
+        if(!isset($response->cod_barras))
+        {
+            $this->descricao = "";
+            return false;
+        }
+
+        foreach(json_decode($encomendas->linhas_encomenda) as $lin)
+        {
+            if($lin->cod_barras == $response->cod_barras)
             {
                 $this->descricao = $lin->designacoes;
             }
@@ -80,8 +163,17 @@ class ShowRececaoDetail extends Component
         {
             $this->descricao = "";
         }
+
         
     }
+
+    function generateRandomString($length = 10) {
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $randomString = substr(str_shuffle($characters), 0, $length);
+     
+        return $randomString;
+     }
+     
 
     public function guardaStock()
     {
@@ -89,44 +181,67 @@ class ShowRececaoDetail extends Component
 
         if($this->codbarras != "" && $this->descricao != "")
         {
-            $response = Encomendas::where('id',$this->encomenda)->first();
+                     
+            $config = Config::first();
 
-            foreach(json_decode($response->linhas_encomenda) as $i => $lin)
+            if($config->cod_barras_accept == 0 && $config->reference_accept == 1)
             {
-                $array[$i] = [
-                    "referencias" => $lin->referencias,
-                    "designacoes" => $lin->designacoes,
-                    "qtd" => $lin->qtd,
-                    "qtdrececionada" =>  $lin->qtdrececionada,
-                    "preco" => $lin->preco
-                ];
+                $checkQtd = MovimentosStock::Where('reference',$this->codbarras)->where('tipo','Entrada')->get();
+            }
+            else if($config->cod_barras_accept == 1 && $config->reference_accept == 0)
+            {
+                $checkQtd = MovimentosStock::where('cod_barras',$this->codbarras)->where('tipo','Entrada')->get();
 
-                if($lin->referencias == $this->codbarras)
+                
+                if(count($checkQtd) == 0)
                 {
-                    if($this->qtd > $lin->qtd || $lin->qtd == 0 )
-                    {
-                        return to_route('tenant.encomendas.rececao.detail', $this->encomenda)
-                        ->with('message', 'Essa quantidade ultrapassa o valor existente!')
-                        ->with('status', 'error');
-                    }
-                    
-                    $subtracao = $lin->qtd - $this->qtd;
-
-                    unset($array[$i]);
-
-                    $array[$i] = [
-                    "referencias" => $lin->referencias,
-                    "designacoes" => $lin->designacoes,
-                    "qtd" => $subtracao,
-                    "qtdrececionada" =>  $lin->qtdrececionada,
-                    "preco" => $lin->preco
-                    ];
+                    $checkQtd = MovimentosStock::Where('reference',$this->codbarras)->where('tipo','Entrada')->get();
                 }
             }
+            else 
+            {
+                $checkQtd = MovimentosStock::where('cod_barras',$this->codbarras)->orWhere('reference',$this->codbarras)->get();
+            }
 
-            Encomendas::where('id',$this->encomenda)->update([
-                "linhas_encomenda" => json_encode($array)
+            $soma = 0;
+
+            foreach($checkQtd as $mov)
+            {
+               
+                $soma += $mov->qtd;
+             
+            }
+
+            $response = Encomendas::where('id',$this->encomenda)->first();
+
+            $qtdInicial = 0;
+            foreach(json_decode($response->linhas_encomenda) as $line)
+            {
+                if($this->codbarras == $line->cod_barras || $this->codbarras == $line->referencias)
+                {
+                    $qtdInicial = $line->qtdrececionada;
+                }
+                
+            }
+             
+            if($this->qtd + $soma > $qtdInicial)
+            {
+                return to_route('tenant.encomendas.rececao.detail', $this->encomenda)
+                ->with('message', 'Essa referência já ultrapassou o número!')
+                ->with('status', 'error');
+            }
+        
+                      
+            MovimentosStockTemporary::where('cod_barras',$this->codbarras)->orWhere('reference',$this->codbarras)->update([
+                
+                "qtd_separada" => $this->qtd,
+                "qtd_separada_recente" => $this->qtd,
+                "concluded_movement" => 0
+            
             ]);
+
+          
+
         }
         else 
         {
@@ -142,6 +257,122 @@ class ShowRececaoDetail extends Component
 
     }
 
+    public function terminarStock()
+    {
+        $mov_temp = MovimentosStockTemporary::where('tipo','Entrada')->where('qtd_separada','!=','0')->get();
+
+        $message = '';
+
+        $message = "<div class='swalBox'>";
+            $message .= "<label>Transferências</label>";
+            
+           
+                $message .= "<br><div class='row mt-4' id='divDate' style='justify-content:center;padding-left:15px;padding-right:15px;'>";
+                    $message .=" <table class='table-striped' style='width:100%;table-layout:fixed;'>";
+                        $message .= "<thead>";
+                            $message .= "<th style='padding-bottom: 10px;font-size:15px;'>Referencia</th>";
+                            $message .= "<th style='padding-bottom: 10px;font-size:15px;'>QTD separada</th>";
+                            $message .= "<th style='padding-bottom: 10px;font-size:15px;'>Passagem</th>";
+                            $message .= "<th style='padding-bottom: 10px;font-size:15px;'>Local</th>";
+                        $message .= "</thead>";
+                        $message .= "<tbody>"; 
+                            foreach($mov_temp as $mov)
+                            {
+                                $message .= "<tr style='text-align:center;'>";
+                                    $message .= "<td style='font-size:15px;'><span>".$mov->reference."</span></td>";
+                                    $message .= "<td style='font-size:15px;'><span>".$mov->qtd_separada."</span></td>";
+                                    $message .= "<td style='font-size:15px;'><span><i class='fa fa-arrow-right' style='color:green;'></i></span></td>";
+
+                                    $response = Localizacoes::where('id',1)->first();
+                                    $message .= "<td style='font-size:15px;'><span>".$response->abreviatura."</span></td>";
+                                    // $message .= "<td style='font-size:15px;'><button type='button' id='btnLoc' style='border:none;background:none;' data-mov=".$mov->id."><i class='fa fa-xmark' style='color:red;'></i></button></td>";
+                                    
+                                $message .= "</tr>";
+                            }
+                        $message .="</tbody>";
+                    $message .= "</table>";
+                $message .= "</div>";
+           
+            
+        $message .= "</div>";
+
+        $this->dispatchBrowserEvent('terminarStock', ['title' => "Verificar Movimentos", 'message' => $message, 'status'=>'info']);
+    }
+
+    public function cancelarStock()
+    {
+        $enc = Encomendas::where('id',$this->encomenda)->first();
+        MovimentosStockTemporary::where('tipo','Entrada')->where('nr_encomenda',$enc->numero_encomenda)->delete();
+
+        return to_route('tenant.encomendas.rececao.detail', $this->encomenda)
+         ->with('message', 'Cancelar')
+         ->with('status', 'success');
+    }
+
+    public function EnviarMovimentosPrincipalRececao()
+    {
+        $response = MovimentosStockTemporary::where('tipo','Entrada')->where('qtd_separada','!=','0')->where('concluded_movement','!=','1')->get();
+
+        $array = [];
+
+        if($response == null)
+        {
+            return to_route('tenant.arrumacoes.encomenda.detail')
+            ->with('message', 'Não contem movimentos!')
+            ->with('status', 'error');
+        }
+
+        if($response->count() > 0)
+        {
+            foreach($response as $resp)
+            {
+                $mov = $this->generateRandomString(8);
+
+                MovimentosStock::create([
+                    "id_movimento" => $mov,
+                    "nr_encomenda" => $resp->nr_encomenda,
+                    "cod_barras" => $resp->cod_barras,
+                    "reference" => $resp->reference,
+                    "qtd" => $resp->qtd_separada_recente,
+                    "tipo" => $resp->tipo,
+                    "localizacao" => $resp->localizacao,
+                ]);
+
+                //ENVIO O POST PARA O SERGIO COM O MOVIMENTO
+
+                $checkIfConcluded = MovimentosStock::where('nr_encomenda', $resp->nr_encomenda)->where('reference', $resp->reference)->where('tipo','Entrada')->sum('qtd');
+
+             
+               
+                if($resp->qtd_inicial == $checkIfConcluded)
+                {
+                    MovimentosStockTemporary::where('nr_encomenda', $resp->nr_encomenda)->where('reference', $resp->reference)->update(["concluded_movement" => 1]);
+                    MovimentosStockTemporary::where('Tipo','Entrada')->delete();
+                }
+                else if($resp->qtd_inicial < $checkIfConcluded)
+                {
+                    MovimentosStock::where('id_movimento',$mov)->delete();
+
+                     return to_route('tenant.encomendas.rececao.detail', $this->encomenda)
+                    ->with('message', 'Essa referência já ultrapassou o número!')
+                    ->with('status', 'error');
+                }
+               
+
+               
+                
+            }     
+            
+            // MovimentosStockTemporary::where('Tipo','Entrada')->delete();
+         
+        }
+
+        return to_route('tenant.encomendas.rececao.detail', $this->encomenda)
+         ->with('message', 'Arrumado com sucesso')
+         ->with('status', 'success');
+    }
+
+
    
     public function paginationView()
     {
@@ -154,9 +385,11 @@ class ShowRececaoDetail extends Component
 
         // **  Numero de encomendas de fornecedor abertos  **/
 
-        $this->encomendaSpecific = $this->encomendaRepository->encomendaDetail($this->encomenda,$this->perPage);
+        //$this->encomendaSpecific = $this->encomendaRepository->encomendaMovimentos($this->stringEncomenda,$this->perPage);
+
+        $this->encomendaSpecific = $this->encomendaRepository->encomendaMovimentos($this->encomenda,$this->perPage);
         
         
-        return view('tenant.livewire.encomendas.encomendadetail',["encomendaDetail" => $this->encomendaSpecific]);
+        return view('tenant.livewire.encomendas.encomendadetail',["encomendaDetail" => $this->encomendaSpecific, "idEncomenda" => $this->encomenda]);
     }
 }

@@ -13,11 +13,11 @@
                 <i class="fa fa-house" aria-hidden="true"></i> {{ __('Company') }}
             </a>
         </li>
-        {{-- <li class="nav-item">
-            <a class="nav-link {{ $emailPanel }}" data-toggle="tab" href="#emailPanel">
-                <i class="fa fa-envelope-o" aria-hidden="true"></i> {{ __('E-mail') }}
+        <li class="nav-item">
+            <a class="nav-link {{ $pickPanel }}" data-toggle="tab" href="#pickPanel">
+                <i class="fa fa-user" aria-hidden="true"></i> {{ __('Modo de Pickagem') }}
             </a>
-        </li> --}}
+        </li>
     </ul>
     <div class="tab-content">
         <div class="tab-pane fade {{ $homePanel }}" id="homePanel" role="tabpanel">
@@ -86,7 +86,7 @@
                 </div>
             </div>
         </div>
-        <div class="tab-pane fade {{ $emailPanel }}" id="emailPanel" role="tabpanel">
+        <div class="tab-pane fade {{ $pickPanel }}" id="pickPanel" role="tabpanel">
             <div class="row">
                 <div class="col-12">
                     <div class="card mb-0" style="border-top-left-radius: 0px; border-top-right-radius: 0px;">
@@ -96,94 +96,19 @@
                                     <div class="col">
                                         <div class="row form-group">
                                             <section class="col-6">
-                                                <label for="senderEmail">{{ __('Sender e-mail') }}</label>
-                                                <input type="text" name="senderEmail" id="senderEmail" class="form-control"
-                                                value="@if(isset($config->sender_email)) $config->sender_email @endif" wire:model.lazy="sender_email">
+                                                <label>{{ __('Verificações:') }}</label>
+                                                <br>
+                                                <input type="checkbox" name="cod_barras_pick" id="cod_barras_pick"
+                                                @if(isset($config->cod_barras_accept)) @if($config->cod_barras_accept == "1") checked @endif @endif wire:model.defer="cod_barras_pick">
+                                                <label> {{ __('Código de barras') }}</label>
+                                                <br>
+                                                <input type="checkbox" name="reference_pick" id="reference_pick"
+                                                @if(isset($config->cod_barras_accept)) @if($config->cod_barras_accept == "1") checked @endif @endif wire:model.defer="reference_pick">
+                                                <label for="senderName"> {{ __('Referência') }}</label>
                                             </section>
-                                            <section class="col-6">
-                                                <label for="senderName">{{ __('Sender name') }}</label>
-                                                <input type="text" name="senderName" id="sender_name" class="form-control"
-                                                value="@if(isset($config->sender_name)) $config->sender_name @endif" wire:model.lazy="sender_name">
-                                            </section>
+                                            
                                         </div>
-                                        <div class="row form-group">
-                                            <section class="col-6">
-                                                <label for="sender_cc_email">{{ __('CC e-mail') }}</label>
-                                                <input type="text" name="sender_cc_email" id="sender_cc_email" class="form-control"
-                                                value="@if(isset($config->sender_cc_email)) $config->sender_cc_email @endif" wire:model.lazy="sender_cc_email">
-                                            </section>
-                                            <section class="col-6">
-                                                <label for="sender_cc_name">{{ __('CC name') }}</label>
-                                                <input type="text" name="sender_cc_name" id="sender_cc_name" class="form-control"
-                                                value="@if(isset($config->sender_cc_name)) $config->sender_cc_name @endif" wire:model.lazy="sender_cc_name">
-                                            </section>
-                                        </div>
-                                        <div class="row form-group">
-                                            <section class="col-6">
-                                                <label for="sender_bcc_email">{{ __('BCC e-mail') }}</label>
-                                                <input type="text" name="sender_bcc_email" id="sender_bcc_email" class="form-control"
-                                                value="@if(isset($config->sender_bcc_email)) $config->sender_bcc_email @endif" wire:model.lazy="sender_bcc_email">
-                                            </section>
-                                            <section class="col-6">
-                                                <label for="sender_bcc_name">{{ __('BCC name') }}</label>
-                                                <input type="text" name="sender_bcc_name" id="sender_bcc_name" class="form-control"
-                                                value="@if(isset($config->sender_bcc_name)) $config->sender_bcc_name @endif" wire:model.lazy="sender_bcc_name">
-                                            </section>
-                                        </div>
-                                        <div class="row form-group">
-                                            <section class="col-6" wire:ignore>
-                                                <label for="signature">{{ __('Signature') }}</label>
-                                                <div class="summernote"></div>
-                                            </section>
-                                            <section class="col-6">
-                                                <label for="alert_email">{{ __("Email Alert")}}</label>
-                                                <input type="text" name="alert_email" id="alert_email" class="form-control" wire:model.defer="alert_email">
-                                               
-                                                <button type="button" class="btn-xs btn-primary mt-2 mb-2" wire:click="addEmail">{{__("Add Email")}}</button>
-                                                
-                                                <table id="dataTables-data" class="table table-responsive-lg mb-0 table-striped" style="display:block;">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>{{ __('Email Alert')}}</th>
-                                                            <th>{{ __("Action")}}</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                       @foreach ($emailsStored as $countEmail => $emails )
-                                                        <tr>
-                                                            <td>{{$emails["email"]}}</td>
-                                                            <td>
-                                                                <div class="dropdown ml-auto text-right">
-                                                                    <button class="btn btn-primary tp-btn-light sharp" type="button" data-toggle="dropdown">
-                                                                     <span class="fs--1">
-                                                                         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="18px" height="18px" viewBox="0 0 24 24" version="1.1">
-                                                                             <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                                                                 <rect x="0" y="0" width="24" height="24"></rect>
-                                                                                 <circle fill="#000000" cx="5" cy="12" r="2"></circle>
-                                                                                 <circle fill="#000000" cx="12" cy="12" r="2"></circle>
-                                                                                 <circle fill="#000000" cx="19" cy="12" r="2"></circle>
-                                                                             </g>
-                                                                         </svg>
-                                                                     </span>
-                                                                    </button>
-                                                                     <div class="dropdown-menu dropdown-menu-left" style="width:fit-content;">                                   
-                                                                        <button class="dropdown-item" wire:click="removeEmail({{$countEmail}})">
-                                                                            {{ __('Delete Email') }}
-                                                                        </button>
-                                                                     </div>
-                                                                 </div>
-                                                            </td>
-                                                            <td colspan="3">
-                                                                <input type="hidden" name="emailsRequest[]" wire:model.defer="emailsRequest" value="{{$emails["email"]}}" data-id="{{$countEmail}}">
-                                                            </td>
-                                                        </tr>
-                                                        @endforeach
-                                                   
-                                                    </tbody>
-                                                </table>
-                                            </section>
-
-                                        </div>
+                                       
                                     </div>
                                 </div>
                             </div>

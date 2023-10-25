@@ -14,7 +14,7 @@
                             <div class="col-12">
                                 <div class="form-group">
                                     <label>{{__("Codigo de Barras")}}</label>
-                                    <input type="text" id="cod_barras" class="form-control" wire:model="codbarras">
+                                    <input type="text" id="cod_barras" class="form-control" wire:model="codbarras" autofocus>
                                 </div>
                             </div>
                             <div class="col-12">
@@ -32,9 +32,21 @@
                         </div>
                                     
                         <div class="row">
-                            <div class="col-md-12 text-right">
-                                <button type="button" id="guardaStock" wire:click="guardaStock" class="btn-sm btn btn-primary">Guardar</button>
+                            <div class="col-md-6 col-xs-6">
+
                             </div>
+                            <div class="col-md-6 col-xs-12" style="padding-left:0px;padding-right:0px;">
+                                <div class="row" style="justify-content:end;">
+                                   
+                                        <button type="button" id="guardaStock" wire:click="guardaStock" class="btn-sm btn btn-primary"><i class="fa fa-plus"></i> Adicionar</button>
+                                
+                                        <button type="button" id="cancelarStock" wire:click="cancelarStock" class="btn-sm btn btn-danger"><i class="fa fa-ban"></i> Cancelar</button>
+                           
+                                        <button type="button" id="terminarStock" wire:click="terminarStock" class="btn-sm btn btn-success"><i class="fa fa-floppy-disk"></i> Terminar</button>
+                             
+                                </div>
+                            </div>
+                          
                         </div>
                     </div>
                 </div>
@@ -84,18 +96,45 @@
             <tr style="text-align:center;">
                 <th style="padding-bottom: 10px;">Referencia</th>
                 <th style="padding-bottom: 10px;">Designacao</th>
-                <th style="padding-bottom: 10px;">QTD</th>
+                <th style="padding-bottom: 10px;">QTD Separada</th>
+                <th style="padding-bottom: 10px;">QTD Inícial</th>
             </tr>
         </thead>
         <tbody>
-            @foreach ($encomendaDetail as $impr)
-                @foreach (json_decode($impr->linhas_encomenda) as $info )
-                    <tr style="text-align:center;">
-                        <td style="padding-bottom:30px;"><br><span>{{ $info->referencias }}</span></td>
-                        <td style="padding-bottom:30px;"><br><span style="padding-right: 5px;padding-left: 5px;">{{ $info->designacoes }}</span></td>
-                        <td style="padding-bottom:30px;"><br><span style="padding-right: 5px;padding-left: 5px;">{{ $info->qtd }}</span></td>
-                    </tr>
-                @endforeach
+            @php
+                $count = -1;
+            @endphp
+    
+            @foreach ($encomendaDetail as $i => $impr)
+                
+                   @php
+                        $soma = 0;
+                       $encomendas = \App\Models\Tenant\Encomendas::where('id',$encomenda)->first(); 
+
+                       $movimentos = \App\Models\Tenant\MovimentosStock::where('tipo','Entrada')->get();
+
+                       foreach($movimentos as $mov)
+                       {
+                          if($mov->cod_barras == $impr->cod_barras)
+                          {
+                            $soma += $mov->qtd;
+                          }
+                        
+                       }
+                       $response_decoded = json_decode($encomendas->linhas_encomenda);
+                 
+
+                   @endphp
+
+              
+
+                        <tr style="text-align:center;">
+                            <td style="padding-bottom:30px;"><br><span>{{ $impr->referencias }}</span></td>
+                            <td style="padding-bottom:30px;"><br><span style="padding-right: 5px;padding-left: 5px;">{{ $impr->designacoes }}</span></td>
+                            <td style="padding-bottom:30px;"><br><span style="padding-right: 5px;padding-left: 5px;">{{ $soma }}</span></td>
+                            <td style="padding-bottom:30px;"><br><span style="padding-right: 5px;padding-left: 5px;">{{ $impr->qtd }} </span></td>
+                        </tr>
+              
             @endforeach
         </tbody>
     </table>
