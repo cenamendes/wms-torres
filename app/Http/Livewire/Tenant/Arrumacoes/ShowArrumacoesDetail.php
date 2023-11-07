@@ -7,10 +7,13 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\Tenant\Config;
 use Livewire\WithFileUploads;
+use Barryvdh\DomPDF\Facade\PDF;
 use App\Models\Tenant\Encomendas;
 use App\Models\Tenant\Localizacoes;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\View;
 use App\Models\Tenant\MovimentosStock;
+use Illuminate\Support\Facades\Storage;
 use App\Models\Tenant\MovimentosStockTemporary;
 use App\Interfaces\Tenant\Arrumacoes\ArrumacoesInterface;
 use App\Interfaces\Tenant\Encomendas\EncomendasInterface;
@@ -20,7 +23,7 @@ class ShowArrumacoesDetail extends Component
     use WithPagination;
     use WithFileUploads;
 
-    protected $listeners = ["removeDosTemporarios" => "removeDosTemporarios", "EnviarMovimentosPrincipal" => "EnviarMovimentosPrincipal"];
+    protected $listeners = ["removeDosTemporarios" => "removeDosTemporarios", "EnviarMovimentosPrincipal" => "EnviarMovimentosPrincipal", "printEtiquetas" => "printEtiquetas"];
     
     public int $perPage;
     
@@ -413,6 +416,53 @@ class ShowArrumacoesDetail extends Component
          ->with('status', 'success');
     }
 
+    public function printEtiquetas($object)
+    {
+        $object_decoded = json_decode($object);
+
+
+        //$variable = strtok($object_decoded["nr_encomenda"], '|');
+
+        //Passar no parametro o objecto
+
+      
+        $new_array = [];
+
+
+        for($i = 1; $i<= $object_decoded->qtd; $i++)
+        {
+            $new_array[$i] = [ 
+                "nr_encomenda" => $object_decoded->nr_encomenda,
+                "cod_barras" => $object_decoded->cod_barras,
+                "reference" => $object_decoded->reference,
+                "designacao" => $object_decoded->designacao,
+                "qtd" => 1,
+                "local" => $object_decoded->local,
+            ];
+
+        }
+
+
+        $customPaper = array(0, 0, 504.00, 216.00);
+        $pdf = PDF::loadView('tenant.livewire.arrumacoes.multiimpressaopdf', ["object" => $new_array])->setPaper($customPaper);
+
+        //guardar ficheiro
+        //depois dar redirect para o ficheiro para dar preview
+
+        if(!Storage::exists(tenant('id') . '/app/stockArrumacoes'))
+        {
+            File::makeDirectory(storage_path('app/stockArrumacoes'), 0755, true, true);
+        }
+
+        $content = $pdf->download()->getOriginalContent();
+        Storage::put(tenant('id') . '/app/stockArrumacoes/etiqueta.pdf',$content);
+
+
+     
+      
+       $this->dispatchBrowserEvent('redirectPage',["tenant" => tenant('id')]);
+    }
+
    
     public function paginationView()
     {
@@ -422,12 +472,13 @@ class ShowArrumacoesDetail extends Component
 
     public function render()
     {
-
         // **  Numero de encomendas de fornecedor abertos  **/
 
         $this->referencias = $this->arrumacoesRepository->getArrumacoes($this->perPage);
 
-               
+        
+
+                       
         
         return view('tenant.livewire.arrumacoes.arrumacaodetail',["referencias" => $this->referencias, "trs" => $this->trs]);
     }

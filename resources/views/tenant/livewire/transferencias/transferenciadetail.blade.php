@@ -53,6 +53,10 @@
                                 <div class="row" style="justify-content:end;">
                                    
                                     <button type="button" id="guardaStock" wire:click="guardaStock" class="btn-sm btn btn-primary"><i class="fa fa-plus"></i> Transferir</button>
+
+                                    <button type="button" id="cancelarStock" wire:click="cancelarStock" class="btn-sm btn btn-danger"><i class="fa fa-ban"></i> Cancelar</button>
+
+                                    <button type="button" id="terminarStock" wire:click="terminarStock" class="btn-sm btn btn-success"><i class="fa fa-floppy-disk"></i> Terminar</button>
                                                      
                                 </div>
                             </div>

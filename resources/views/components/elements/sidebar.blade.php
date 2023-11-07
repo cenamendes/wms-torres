@@ -52,8 +52,10 @@
                     <i class="fa-solid fa-boxes-stacked"></i>
                     <span class="nav-text">Transferências</span>
                     </a>
+                    
                     <ul aria-expanded="false">
-                       <li><a href="{{ route('tenant.transferencia.index') }}">{{ __('Transferências') }}</a></li>
+                       <li><a href="{{ route('tenant.transferencia.index') }}">{{ __('Transferir') }}</a></li>
+                       <li><a href="{{ route('tenant.listagem.index')}}">{{ __('Listagem') }}</a></li>
                     </ul>
                 </li>
 

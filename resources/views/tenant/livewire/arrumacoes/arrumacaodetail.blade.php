@@ -49,7 +49,7 @@
                                    
                                     <button type="button" id="guardaStock" wire:click="guardaStock" class="btn-sm btn btn-primary"><i class="fa fa-plus"></i> Adicionar</button>
                                                    
-                                    {{-- <button type="button" id="terminarStock" wire:click="terminarStock" class="btn-sm btn btn-success"><i class="fa fa-floppy-disk"></i> Terminar</button> --}}
+                                    <button type="button" id="terminarStock" wire:click="terminarStock" class="btn-sm btn btn-success"><i class="fa fa-floppy-disk"></i> Terminar</button>
                          
                                 </div>
                             </div>
@@ -105,6 +105,7 @@
                 <th style="padding-bottom: 10px;">Designacao</th>
                 <th style="padding-bottom: 10px;">QTD</th>
                 <th style="padding-bottom: 10px;">Local</th>
+                <th style="padding-bottom: 10px;">Ação</th>
             </tr>
         </thead>
         <tbody>
@@ -116,6 +117,11 @@
                             <td style="padding-bottom:30px;"><br><span style="padding-right: 5px;padding-left: 5px;">{{ $impr["designacao"] }}</span></td>
                             <td style="padding-bottom:30px;"><br><span style="padding-right: 5px;padding-left: 5px;">{{ $impr["qtd"] }}</span></td>
                             <td style="padding-bottom:30px;"><br><span style="padding-right: 5px;padding-left: 5px;">{{ $impr["local"] }}</span></td>
+                            <td>
+                                <a id="printButton" data-id="{{ json_encode($impr) }}" class="btn btn-primary shadow sharp mr-1">
+                                    <i class="fa fa-print"></i>
+                                </a>
+                            </td>
                         </tr>
                 @endif
             @endforeach

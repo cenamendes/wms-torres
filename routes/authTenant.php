@@ -129,6 +129,8 @@ Route::middleware(['auth', 'cmsSettings'])->group(function () {
 
     Route::get('transferencias',[TransferenciasController::class,'index'])->name('tenant.transferencia.index');
 
+    Route::get('transferencias/listagem',[TransferenciasController::class,'list'])->name('tenant.listagem.index');
+
     /*************** */
   
 

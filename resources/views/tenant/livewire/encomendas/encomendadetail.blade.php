@@ -20,7 +20,7 @@
                             <div class="col-12">
                                 <div class="form-group">
                                     <label>{{__("Descrição")}}</label>
-                                    <input type="text" id="descricao" class="form-control" wire:model.defer="descricao" readonly>
+                                    <input type="text" id="descricao" class="form-control" wire:model.defer="descricao" readonly> <!-- READONLY -->
                                 </div>
                             </div>
                             <div class="col-12">

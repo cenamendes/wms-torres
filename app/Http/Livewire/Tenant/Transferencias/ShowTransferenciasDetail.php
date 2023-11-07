@@ -21,7 +21,7 @@ class ShowTransferenciasDetail extends Component
     use WithPagination;
     use WithFileUploads;
 
-    //protected $listeners = ["removeDosTemporarios" => "removeDosTemporarios", "EnviarMovimentosPrincipal" => "EnviarMovimentosPrincipal"];
+    protected $listeners = ["EnviarMovimentosPrincipalTransferencias" => "EnviarMovimentosPrincipalTransferencias"];
     
     public int $perPage;
     
@@ -84,6 +84,7 @@ class ShowTransferenciasDetail extends Component
 
     public function guardaStock()
     {
+       
         $array = [];
 
         if($this->transferir != "" && $this->selectOrigin != "")
@@ -141,23 +142,23 @@ class ShowTransferenciasDetail extends Component
                             $number = $this->generateRandomString(8);
 
 
-                            MovimentosStock::create([
+                            MovimentosStockTemporary::create([
                                 "id_movimento" => $number,
                                 "nr_encomenda" => $rf["nr_encomenda"],
                                 "cod_barras" => $rf["cod_barras"],
                                 "reference" => $rf["reference"],
-                                "qtd" => "-".$this->qtd,
-                                "tipo" => "Transferencia",
+                                "qtd_separada" => "-".$this->qtd,
+                                "tipo" => "stockTransfer",
                                 "localizacao" => $id_localizacao_original
                             ]);
                 
-                            MovimentosStock::create([
+                            MovimentosStockTemporary::create([
                                 "id_movimento" => $number,
                                 "nr_encomenda" => $rf["nr_encomenda"],
                                 "cod_barras" => $rf["cod_barras"],
                                 "reference" => $rf["reference"],
-                                "qtd" => $this->qtd,
-                                "tipo" => "Transferencia",
+                                "qtd_separada" => $this->qtd,
+                                "tipo" => "stockTransfer",
                                 "localizacao" => $id_localizacao->id
                             ]);
                             
@@ -194,23 +195,23 @@ class ShowTransferenciasDetail extends Component
                                 $number = $this->generateRandomString(8);
 
 
-                                MovimentosStock::create([
+                                MovimentosStockTemporary::create([
                                     "id_movimento" => $number,
                                     "nr_encomenda" => $rf["nr_encomenda"],
                                     "cod_barras" => $rf["cod_barras"],
                                     "reference" => $rf["reference"],
-                                    "qtd" => "-".$this->qtd,
-                                    "tipo" => "Transferencia",
+                                    "qtd_separada" => "-".$this->qtd,
+                                    "tipo" => "stockTransfer",
                                     "localizacao" => $id_localizacao_original
                                 ]);
                     
-                                MovimentosStock::create([
+                                MovimentosStockTemporary::create([
                                     "id_movimento" => $number,
                                     "nr_encomenda" => $rf["nr_encomenda"],
                                     "cod_barras" => $rf["cod_barras"],
                                     "reference" => $rf["reference"],
-                                    "qtd" => $this->qtd,
-                                    "tipo" => "Transferencia",
+                                    "qtd_separada" => $this->qtd,
+                                    "tipo" => "stockTransfer",
                                     "localizacao" => $id_localizacao->id
                                 ]);
                             }
@@ -244,23 +245,23 @@ class ShowTransferenciasDetail extends Component
                                 $number = $this->generateRandomString(8);
 
 
-                                MovimentosStock::create([
+                                MovimentosStockTemporary::create([
                                     "id_movimento" => $number,
                                     "nr_encomenda" => $rf["nr_encomenda"],
                                     "cod_barras" => $rf["cod_barras"],
                                     "reference" => $rf["reference"],
-                                    "qtd" => "-".$this->qtd,
-                                    "tipo" => "Transferencia",
+                                    "qtd_separada" => "-".$this->qtd,
+                                    "tipo" => "stockTransfer",
                                     "localizacao" => $id_localizacao_original
                                 ]);
                     
-                                MovimentosStock::create([
+                                MovimentosStockTemporary::create([
                                     "id_movimento" => $number,
                                     "nr_encomenda" => $rf["nr_encomenda"],
                                     "cod_barras" => $rf["cod_barras"],
                                     "reference" => $rf["reference"],
-                                    "qtd" => $this->qtd,
-                                    "tipo" => "Transferencia",
+                                    "qtd_separada" => $this->qtd,
+                                    "tipo" => "stockTransfer",
                                     "localizacao" => $id_localizacao->id
                                 ]);
                             }
@@ -296,23 +297,23 @@ class ShowTransferenciasDetail extends Component
                             $number = $this->generateRandomString(8);
 
 
-                            MovimentosStock::create([
+                            MovimentosStockTemporary::create([
                                 "id_movimento" => $number,
                                 "nr_encomenda" => $rf["nr_encomenda"],
                                 "cod_barras" => $rf["cod_barras"],
                                 "reference" => $rf["reference"],
-                                "qtd" => "-".$this->qtd,
-                                "tipo" => "Transferencia",
+                                "qtd_separada" => "-".$this->qtd,
+                                "tipo" => "stockTransfer",
                                 "localizacao" => $id_localizacao_original
                             ]);
                 
-                            MovimentosStock::create([
+                            MovimentosStockTemporary::create([
                                 "id_movimento" => $number,
                                 "nr_encomenda" => $rf["nr_encomenda"],
                                 "cod_barras" => $rf["cod_barras"],
                                 "reference" => $rf["reference"],
-                                "qtd" => $this->qtd,
-                                "tipo" => "Transferencia",
+                                "qtd_separada" => $this->qtd,
+                                "tipo" => "stockTransfer",
                                 "localizacao" => $id_localizacao->id
                             ]);
                         }
@@ -337,6 +338,126 @@ class ShowTransferenciasDetail extends Component
          ->with('status', 'success');
 
     }
+
+    public function terminarStock()
+    {
+        $mov_temp = MovimentosStockTemporary::where('tipo','stockTransfer')
+        ->where('qtd_separada','>','0')
+        ->where('qtd_separada','!=','0')
+        ->get();
+
+        $message = '';
+
+        $message = "<div class='swalBox'>";
+            $message .= "<label>Transferências</label>";
+            
+           
+                $message .= "<br><div class='row mt-4' id='divDate' style='justify-content:center;padding-left:15px;padding-right:15px;'>";
+                    $message .=" <table class='table-striped' style='width:100%;table-layout:fixed;'>";
+                        $message .= "<thead>";
+                            $message .= "<th style='padding-bottom: 10px;font-size:15px;'>Referencia</th>";
+                            $message .= "<th style='padding-bottom: 10px;font-size:15px;'>QTD separada</th>";
+                            $message .= "<th style='padding-bottom: 10px;font-size:15px;'>Passagem</th>";
+                            $message .= "<th style='padding-bottom: 10px;font-size:15px;'>Local</th>";
+                        $message .= "</thead>";
+                        $message .= "<tbody>"; 
+                            foreach($mov_temp as $mov)
+                            {
+                                $message .= "<tr style='text-align:center;'>";
+                                    $message .= "<td style='font-size:15px;'><span>".$mov->reference."</span></td>";
+                                    $message .= "<td style='font-size:15px;'><span>".$mov->qtd_separada."</span></td>";
+                                    $message .= "<td style='font-size:15px;'><span><i class='fa fa-arrow-right' style='color:green;'></i></span></td>";
+
+                                    $response = Localizacoes::where('id',$mov->localizacao)->first();
+                                    $message .= "<td style='font-size:15px;'><span>".$response->abreviatura."</span></td>";
+                                    // $message .= "<td style='font-size:15px;'><button type='button' id='btnLoc' style='border:none;background:none;' data-mov=".$mov->id."><i class='fa fa-xmark' style='color:red;'></i></button></td>";
+                                    
+                                $message .= "</tr>";
+                            }
+                        $message .="</tbody>";
+                    $message .= "</table>";
+                $message .= "</div>";
+           
+            
+        $message .= "</div>";
+
+        $this->dispatchBrowserEvent('terminarStock', ['title' => "Verificar Movimentos", 'message' => $message, 'status'=>'info']);
+    }
+
+    public function EnviarMovimentosPrincipalTransferencias()
+    {
+        $response = MovimentosStockTemporary::where('tipo','stockTransfer')->where('qtd_separada','!=','0')->get();
+
+
+        $array = [];
+
+        if($response == null)
+        {
+            return to_route('tenant.transferencia.index')
+            ->with('message', 'Não contem movimentos!')
+            ->with('status', 'error');
+        }
+
+        if($response->count() > 0)
+        {
+            foreach($response as $resp)
+            {
+                $mov = $this->generateRandomString(8);
+
+                MovimentosStock::create([
+                    "id_movimento" => $mov,
+                    "nr_encomenda" => $resp->nr_encomenda,
+                    "cod_barras" => $resp->cod_barras,
+                    "reference" => $resp->reference,
+                    "qtd" => $resp->qtd_separada,
+                    "tipo" => "Transferencia",
+                    "localizacao" => $resp->localizacao,
+                ]);
+
+                //ENVIO O POST PARA O SERGIO COM O MOVIMENTO
+
+                // $checkIfConcluded = MovimentosStock::where('nr_encomenda', $resp->nr_encomenda)->where('reference', $resp->reference)->where('tipo','Entrada')->sum('qtd');
+
+             
+               
+                // if($resp->qtd_inicial == $checkIfConcluded)
+                // {
+                //     MovimentosStockTemporary::where('nr_encomenda', $resp->nr_encomenda)->where('reference', $resp->reference)->update(["concluded_movement" => 1]);
+                    MovimentosStockTemporary::where('Tipo','stockTransfer')->delete();
+               // }
+                // else if($resp->qtd_inicial < $checkIfConcluded)
+                // {
+                //     MovimentosStock::where('id_movimento',$mov)->delete();
+
+                //      return to_route('tenant.transferencia.index')
+                //     ->with('message', 'Essa referência já ultrapassou o número!')
+                //     ->with('status', 'error');
+                // }
+               
+
+               
+                
+            }     
+            
+            // MovimentosStockTemporary::where('Tipo','Entrada')->delete();
+         
+        }
+
+        return to_route('tenant.transferencia.index')
+         ->with('message', 'Transferido com sucesso')
+         ->with('status', 'success');
+    }
+
+    public function cancelarStock()
+    {
+        
+        MovimentosStockTemporary::where('tipo','stockTransfer')->delete();
+
+        return to_route('tenant.transferencia.index')
+         ->with('message', 'Cancelar')
+         ->with('status', 'success');
+    }
+
 
 
     public function render()

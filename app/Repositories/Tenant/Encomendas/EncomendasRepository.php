@@ -158,7 +158,6 @@ class EncomendasRepository implements EncomendasInterface
         ));
     
         $response = curl_exec($curl);
-
     
         $response_decoded = json_decode($response);
 

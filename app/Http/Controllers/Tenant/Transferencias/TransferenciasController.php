@@ -24,6 +24,17 @@ class TransferenciasController extends Controller
             'message' => session('message'),
         ]);
     }
+
+    public function list(): View
+    {
+        return view('tenant.transferencia.list', [
+            'themeAction' => 'form_element_data_table',
+            'status' => session('status'),
+            'message' => session('message'),
+        ]);
+    }
+
+
    
 
 }

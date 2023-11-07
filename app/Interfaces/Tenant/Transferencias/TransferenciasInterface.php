@@ -14,4 +14,11 @@ interface TransferenciasInterface
     public function getCodBarrasCollection(): array;
 
 
+    //PARTE DA LISTAGEM
+
+    public function getListagem($perPage): LengthAwarePaginator;
+
+    public function getListagemSearch($searchString,$perPage): LengthAwarePaginator;
+
+
 }

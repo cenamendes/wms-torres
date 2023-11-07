@@ -13,7 +13,14 @@ use App\Interfaces\Tenant\Encomendas\EncomendasInterface;
 
 class ArrumacoesRepository implements ArrumacoesInterface
 {
+    public $encomendasRepository;
+
+    public function boot(EncomendasInterface $interfaceEncomendas)
+    {
+        $this->encomendasRepository = $interfaceEncomendas;
+    }
     
+
     public function getArrumacoes($perPage): LengthAwarePaginator
     {
         $arrumacoes = Encomendas::all();
@@ -23,7 +30,7 @@ class ArrumacoesRepository implements ArrumacoesInterface
         foreach($arrumacoes as $arr)
         {
             foreach(json_decode($arr->linhas_encomenda) as $lines)
-            {
+            {               
                 array_push($referencias,$lines);
             }
         }
@@ -43,6 +50,38 @@ class ArrumacoesRepository implements ArrumacoesInterface
                     foreach($check as $i => $ch)
                     {
                         $soma += $ch->qtd; 
+
+                        $curl = curl_init();
+
+                        curl_setopt_array($curl, array(
+                            CURLOPT_URL => 'http://phc.brvr.pt:25002/products/product?reference='.$ch->reference,
+                            CURLOPT_RETURNTRANSFER => true,
+                            CURLOPT_ENCODING => '',
+                            CURLOPT_MAXREDIRS => 10,
+                            CURLOPT_TIMEOUT => 0,
+                            CURLOPT_FOLLOWLOCATION => true,
+                            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                            CURLOPT_CUSTOMREQUEST => 'GET',
+                            CURLOPT_HTTPHEADER => array(
+                            'Content-Type: application/json'
+                            ),
+                        ));
+                    
+                        $response = curl_exec($curl);
+                    
+                        $response_decoded = json_decode($response);
+
+                      
+                       
+                       
+                        $soma = $soma - $response_decoded->ordered;
+                        
+                        // if( $soma > $response_decoded->stock)
+                        // {
+                        //     $soma = $response_decoded->stock;
+                        // }
+
+
                         $arrayLocal[$ref->referencias] = ["nr_encomenda" => $ch->nr_encomenda,"cod_barras" => $ch->cod_barras,"reference" => $ch->reference, "designacao" => $ref->designacoes, "qtd" => $soma, "local" => $local->abreviatura];                   
                     }
                     

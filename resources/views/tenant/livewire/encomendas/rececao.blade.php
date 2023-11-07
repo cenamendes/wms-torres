@@ -74,6 +74,9 @@
                                             <td><span style="padding-right: 5px;padding-left: 5px;">{{ $impr->nome_fornecedor }}</span></td>
                                             <td><span style="padding-right: 5px;padding-left: 5px;">{{ date('Y-m-d',strtotime($impr->data_documento)) }}</span></td>
                                             <td>
+                                                <a wire:click="sendBarcode({{$impr->id}})" class="btn btn-primary shadow sharp mr-1">
+                                                    <i class="fa fa-edit"></i>
+                                                </a>
                                                 <a href="{{ route('tenant.encomendas.rececao.detail', $impr->id) }}" class="btn btn-primary shadow sharp mr-1">
                                                     <i class="fa fa-eye"></i>
                                                 </a>
@@ -133,11 +136,17 @@
                 return;
             }
 
+            var arrImg = [];
+
             var scannedImages = scanner.getScannedImages(response, true, false); // returns an array of ScannedImage
             for(var i = 0; (scannedImages instanceof Array) && i < scannedImages.length; i++) {
                 var scannedImage = scannedImages[i];
                 processScannedImage(scannedImage);
+                //arrImg.push(scannedImage);
             }
+
+            //Livewire.emit("ReceiveImage",arrImg);
+
         }
 
         /** Images scanned so far. */
@@ -153,7 +162,6 @@
                     'src': scannedImage.src
                 }
             });
-            //document.getElementById('images').appendChild(elementImg);
 
             Livewire.emit("ReceiveImage",scannedImage.src);
 
@@ -165,6 +173,31 @@
                     html: e.detail.message,
                     type: e.detail.status,
             })
+        });
+
+        window.addEventListener('SendBarCode', function (e) {
+
+            swal.fire({
+                title: e.detail.title,
+                html: e.detail.message,
+                type: e.detail.status,
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                confirmButtonText: "Alterar",
+                cancelButtonText: "Cancelar",
+				onOpen: function() {
+                  
+                }
+            })
+            .then((result) => {
+                if(result.value) {
+                    var encNumber = jQuery("#encNumber").val();
+								    
+                    if(encNumber != ""){
+                        Livewire.emit('encChange',encNumber,e.detail.id);
+                    }
+                }
+            });
         });
 
     </script>

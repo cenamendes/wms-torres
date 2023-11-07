@@ -1,4 +1,5 @@
-<x-tenant-layout title="Detalhes das Trânsferências" :themeAction="$themeAction" :status="$status" :message="$message">
+
+<x-tenant-layout title="Listagem Trânsferências" :themeAction="$themeAction" :status="$status" :message="$message">
     {{-- Content --}}
     <div class="container-fluid">
         <div class="row">
@@ -6,7 +7,7 @@
                 <div class="page-titles">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="javascript:void(0)">Transferências</a></li>
-                        <li class="breadcrumb-item active"><a href="javascript:void(0)">Referências</a></li>
+                        <li class="breadcrumb-item active"><a href="javascript:void(0)">Listagem</a></li>
                     </ol>
                 </div>
             </div>
@@ -18,7 +19,7 @@
                         <h4 class="card-title">Transferências</h4>
                     </div>
                     <div class="card-body">
-                        @livewire('tenant.transferencias.show-transferencias-detail')
+                        @livewire('tenant.transferencias.list-transferencias')
                     </div>
                 </div>
             </div>
@@ -52,7 +53,7 @@
             if(result.value) {
 
                 
-                Livewire.emit('EnviarMovimentosPrincipalTransferencias');
+                Livewire.emit('EnviarMovimentosPrincipal');
                 
                
             }

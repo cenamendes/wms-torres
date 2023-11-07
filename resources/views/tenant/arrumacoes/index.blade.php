@@ -59,5 +59,18 @@
         });
            
     });
+
+    jQuery('body').on('click', '#printButton', function() {
+        
+        var print = jQuery(this).attr("data-id");
+
+        Livewire.emit("printEtiquetas",print);
+
+    });
+
+    window.addEventListener('redirectPage',function(e){
+        window.open(location.protocol+"//"+document.domain+"/cl/"+e.detail.tenant+"/app/stockArrumacoes/etiqueta.pdf");
+        //console.log(document.domain+)
+    });
     
 </script>
