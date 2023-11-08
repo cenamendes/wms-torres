@@ -145,7 +145,7 @@ class ShowRececaoDetail extends Component
 
         $encomendas = Encomendas::where('id',$this->encomenda)->first();
 
-        if(!isset($response->cod_barras))
+        if(!isset($response->cod_barras) && !isset($response->reference))
         {
             $this->descricao = "";
             return false;
@@ -153,11 +153,24 @@ class ShowRececaoDetail extends Component
 
         foreach(json_decode($encomendas->linhas_encomenda) as $lin)
         {
-            if($lin->cod_barras == $response->cod_barras)
+            if($lin->cod_barras != "" && $response->cod_barras != "" )
             {
-                $this->descricao = $lin->designacoes;
+                
+                if($lin->cod_barras == $response->cod_barras)
+                {
+                    $this->descricao = $lin->designacoes;
+                }
             }
+            else
+            {
+                if($lin->referencias == $response->reference)
+                {
+                    $this->descricao = $lin->designacoes;
+                }
+            }
+           
         }
+
 
         if($this->codbarras == "")
         {
@@ -236,7 +249,7 @@ class ShowRececaoDetail extends Component
                 
                 "qtd_separada" => $this->qtd,
                 "qtd_separada_recente" => $this->qtd,
-                "concluded_movement" => 0
+                "concluded_movement" => 1
             
             ]);
 
@@ -311,7 +324,7 @@ class ShowRececaoDetail extends Component
 
     public function EnviarMovimentosPrincipalRececao()
     {
-        $response = MovimentosStockTemporary::where('tipo','Entrada')->where('qtd_separada','!=','0')->where('concluded_movement','!=','1')->get();
+        $response = MovimentosStockTemporary::where('tipo','Entrada')->where('qtd_separada','!=','0')->where('concluded_movement','!=','0')->get();
 
         $array = [];
 
@@ -344,12 +357,12 @@ class ShowRececaoDetail extends Component
 
              
                
-                if($resp->qtd_inicial == $checkIfConcluded)
-                {
+                // if($resp->qtd_inicial == $checkIfConcluded)
+                // {
                     MovimentosStockTemporary::where('nr_encomenda', $resp->nr_encomenda)->where('reference', $resp->reference)->update(["concluded_movement" => 1]);
                     MovimentosStockTemporary::where('Tipo','Entrada')->delete();
-                }
-                else if($resp->qtd_inicial < $checkIfConcluded)
+               // }
+                if($resp->qtd_inicial < $checkIfConcluded)
                 {
                     MovimentosStock::where('id_movimento',$mov)->delete();
 

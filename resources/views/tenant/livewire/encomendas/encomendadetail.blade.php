@@ -111,7 +111,7 @@
                         $soma = 0;
                        $encomendas = \App\Models\Tenant\Encomendas::where('id',$encomenda)->first(); 
 
-                       $movimentos = \App\Models\Tenant\MovimentosStock::where('tipo','Entrada')->get();
+                       $movimentos = \App\Models\Tenant\MovimentosStock::where('tipo','Entrada')->where('reference',$impr->referencias)->get();
 
                        foreach($movimentos as $mov)
                        {

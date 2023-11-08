@@ -208,6 +208,8 @@ class ShowArrumacoesDetail extends Component
                                 ]);
                                 
                             }
+
+            
                         }
                         else
                         {
@@ -250,39 +252,84 @@ class ShowArrumacoesDetail extends Component
                     }
                     else 
                     {
-                        if($rf["reference"] == $this->codbarras)
+                        
+                        if($rf["cod_barras"] == "")
                         {
-                            if($this->qtd > $rf["qtd"] || $rf["qtd"]  == 0 )
+                            
+                            if($rf["reference"] == $this->codbarras)
                             {
-                                return to_route('tenant.arrumacoes.encomenda.detail')
-                                ->with('message', 'Essa quantidade ultrapassa o valor existente!')
-                                ->with('status', 'error');
+                                if($this->qtd > $rf["qtd"] || $rf["qtd"]  == 0 )
+                                {
+                                    return to_route('tenant.arrumacoes.encomenda.detail')
+                                    ->with('message', 'Essa quantidade ultrapassa o valor existente!')
+                                    ->with('status', 'error');
+                                }
+    
+                                $id_localizacao = Localizacoes::where('cod_barras',$this->transferir)->first();
+    
+                                $number = $this->generateRandomString(8);
+    
+                                MovimentosStockTemporary::create([
+                                    "id_movimento" => $number,
+                                    "nr_encomenda" => $rf["nr_encomenda"],
+                                    "cod_barras" => $rf["cod_barras"],
+                                    "reference" => $rf["reference"],
+                                    "qtd_separada" => "-".$this->qtd,
+                                    "tipo" => "Transferencia",
+                                    "localizacao" => 1
+                                ]);
+                    
+                                MovimentosStockTemporary::create([
+                                    "id_movimento" => $number,
+                                    "nr_encomenda" => $rf["nr_encomenda"],
+                                    "cod_barras" => $rf["cod_barras"],
+                                    "reference" => $rf["reference"],
+                                    "qtd_separada" => $this->qtd,
+                                    "tipo" => "Transferencia",
+                                    "localizacao" => $id_localizacao->id
+                                ]);
+                                
                             }
-
-                            $id_localizacao = Localizacoes::where('cod_barras',$this->transferir)->first();
-
-                            $number = $this->generateRandomString(8);
-
-                            MovimentosStockTemporary::create([
-                                "id_movimento" => $number,
-                                "nr_encomenda" => $rf["nr_encomenda"],
-                                "cod_barras" => $rf["cod_barras"],
-                                "reference" => $rf["reference"],
-                                "qtd_separada" => "-".$this->qtd,
-                                "tipo" => "Transferencia",
-                                "localizacao" => 1
-                            ]);
-                
-                            MovimentosStockTemporary::create([
-                                "id_movimento" => $number,
-                                "nr_encomenda" => $rf["nr_encomenda"],
-                                "cod_barras" => $rf["cod_barras"],
-                                "reference" => $rf["reference"],
-                                "qtd_separada" => $this->qtd,
-                                "tipo" => "Transferencia",
-                                "localizacao" => $id_localizacao->id
-                            ]);
+            
                         }
+                        else
+                        {
+                            if($rf["cod_barras"] == $this->codbarras)
+                            {
+                                if($this->qtd > $rf["qtd"] || $rf["qtd"]  == 0 )
+                                {
+                                    return to_route('tenant.arrumacoes.encomenda.detail')
+                                    ->with('message', 'Essa quantidade ultrapassa o valor existente!')
+                                    ->with('status', 'error');
+                                }
+    
+                                $id_localizacao = Localizacoes::where('cod_barras',$this->transferir)->first();
+    
+                                $number = $this->generateRandomString(8);
+    
+                                MovimentosStockTemporary::create([
+                                    "id_movimento" => $number,
+                                    "nr_encomenda" => $rf["nr_encomenda"],
+                                    "cod_barras" => $rf["cod_barras"],
+                                    "reference" => $rf["reference"],
+                                    "qtd_separada" => "-".$this->qtd,
+                                    "tipo" => "Transferencia",
+                                    "localizacao" => 1
+                                ]);
+                    
+                                MovimentosStockTemporary::create([
+                                    "id_movimento" => $number,
+                                    "nr_encomenda" => $rf["nr_encomenda"],
+                                    "cod_barras" => $rf["cod_barras"],
+                                    "reference" => $rf["reference"],
+                                    "qtd_separada" => $this->qtd,
+                                    "tipo" => "Transferencia",
+                                    "localizacao" => $id_localizacao->id
+                                ]);
+                                
+                            }
+                        }
+                       
                     }
                     
                     
@@ -290,7 +337,7 @@ class ShowArrumacoesDetail extends Component
                 
                 }
 
-                $this->EnviarMovimentosPrincipal();
+                //$this->EnviarMovimentosPrincipal();
 
             }
             else 

@@ -77,6 +77,7 @@ class Separacoes extends Component
             $this->encomendas = $this->separacoesRepository->getEncomendasSeparacoes($this->perPage);
         }
 
+        dd($this->encomendas);
         
         return view('tenant.livewire.separacoes.separacoes',["encomendas" => $this->encomendas]);
     }

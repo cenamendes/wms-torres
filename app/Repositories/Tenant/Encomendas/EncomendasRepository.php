@@ -7,6 +7,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use App\Interfaces\Tenant\Encomendas\EncomendasInterface;
 use App\Models\Tenant\MovimentosStockTemporary;
 use Illuminate\Support\Collection;
+use stdClass;
 
 class EncomendasRepository implements EncomendasInterface
 {
@@ -161,6 +162,10 @@ class EncomendasRepository implements EncomendasInterface
     
         $response_decoded = json_decode($response);
 
+        if($response_decoded == null)
+        {
+            $response_decoded = new stdClass;
+        }
 
         //A RESPONSE SERÁ UMA STRING QUE VOU PASSAR O CODIGO DE BARRAS
 

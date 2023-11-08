@@ -324,7 +324,7 @@ class ShowSeparacoesDetail extends Component
     {
         $response = MovimentosStockTemporary::where('tipo','Saida')->where('qtd_separada','!=','0')->where('concluded_movement','!=','1')->where('nr_encomenda',$orderNumber)->get();
 
-
+        //mandar a informação aqui para o sergio
         dd($response);
 
         $array = [];
