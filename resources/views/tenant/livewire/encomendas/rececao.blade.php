@@ -201,7 +201,7 @@
             });
     
             window.addEventListener('downloadImage', function (e) {
-                window.open("cl/"+e.detail.img, '_blank'); 
+                window.open(window.location.protocol + '//' + window.location.hostname+"/cl/"+e.detail.img, '_blank'); 
             });
     
         </script>
