@@ -15,7 +15,7 @@
             <div class="col-xl-9 col-xs-6">
                 <div class="page-titles">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="javascript:void(0)">Scan Encomenda</a></li>
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Scan Encomendaa</a></li>
                         <li class="breadcrumb-item active"><a href="javascript:void(0)">{{ __('List') }}</a></li>
                     </ol>
                 </div>
