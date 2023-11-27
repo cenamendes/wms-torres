@@ -25,4 +25,7 @@ interface SeparacoesInterface
     public function getEncomendaSeparacaoByStamp($stamp): object;
 
 
+    public function getCodBarras($reference): object;
+
+
 }

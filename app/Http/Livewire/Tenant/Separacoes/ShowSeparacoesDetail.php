@@ -238,6 +238,17 @@ class ShowSeparacoesDetail extends Component
                 ->with('status', 'error');
             }
 
+
+            $checkStatusOrdered = $this->separacoesRepository->getCodBarras($this->codbarras);
+
+            if($this->qtd + $soma > $checkStatusOrdered->stock)
+            {
+                return to_route('tenant.separacoes.encomenda.detail', $this->encomenda)
+                ->with('message', 'Já ultrapassa o valor em stock!')
+                ->with('status', 'error');
+            }
+
+
             $qtd_somada = $this->qtd + $soma;
         
           

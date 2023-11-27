@@ -267,6 +267,39 @@ class SeparacoesRepository implements SeparacoesInterface
 
         return $new_object;
     }
+
+    public function getCodBarras($reference): object
+    {
+        //$result_encoded = json_encode($object);
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => 'http://phc.brvr.pt:25002/products/product?reference='.$reference,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'GET',
+            CURLOPT_HTTPHEADER => array(
+            'Content-Type: application/json'
+            ),
+        ));
+    
+        $response = curl_exec($curl);
+    
+        $response_decoded = json_decode($response);
+
+        if($response_decoded == null)
+        {
+            $response_decoded = new stdClass;
+        }
+
+        //A RESPONSE SERÁ UMA STRING QUE VOU PASSAR O CODIGO DE BARRAS
+
+        return $response_decoded;
+    }
   
    
 
