@@ -65,6 +65,8 @@
                     </a>
                     <ul aria-expanded="false">
                         <li><a href="{{ route('tenant.setup.app') }}">{{ __('Config')}}</a></li>
+                        <li><a href="{{ route('tenant.codbarras-produto.index')}}">Atualizar Código de Barras de produto</a></li>
+                        <li><a href="{{ route('tenant.codbarras-localizacao.index')}}">Atualizar Código de Barras de localização</a></li>
                         <li><a href="{{ route('tenant.locations.index') }}">Localizações</a></li>
                         <li><a href="{{ route('tenant.locations.order') }}">Ordem Localizações</a></li>
                     </ul>

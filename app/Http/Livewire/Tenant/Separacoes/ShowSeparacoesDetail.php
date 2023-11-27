@@ -271,7 +271,8 @@ class ShowSeparacoesDetail extends Component
 
     public function terminarStock($orderNumber)
     {
-        $mov_temp = MovimentosStockTemporary::where('tipo','Saida')->where('qtd_separada','!=','0')->where('nr_encomenda',trim($orderNumber))->get();
+
+        $mov_temp = MovimentosStockTemporary::where('tipo','Saida')->where('qtd_separada','!=','0')->where('nr_encomenda',trim($this->orderNumber))->get();
 
         $message = '';
 
@@ -322,11 +323,11 @@ class ShowSeparacoesDetail extends Component
 
     public function EnviarMovimentosPrincipalSeparacao($orderNumber)
     {
-        $response = MovimentosStockTemporary::where('tipo','Saida')->where('qtd_separada','!=','0')->where('concluded_movement','!=','1')->where('nr_encomenda',$orderNumber)->get();
-
+        $response = MovimentosStockTemporary::where('tipo','Saida')->where('qtd_separada','!=','0')->where('nr_encomenda',$this->orderNumber)->get();
         //mandar a informação aqui para o sergio
-        dd($response);
-
+        
+    
+      
         $array = [];
 
         if($response == null)
@@ -338,7 +339,7 @@ class ShowSeparacoesDetail extends Component
 
         if($response->count() > 0)
         {
-            foreach($response as $resp)
+            foreach($response as $i => $resp)
             {
                 $mov = $this->generateRandomString(8);
 
@@ -375,11 +376,70 @@ class ShowSeparacoesDetail extends Component
                 }
                
 
+
+                $arraySend[$i] = [
+                    "order_number" => $resp->nr_encomenda,
+                    "barcode" => $resp->cod_barras,
+                    "reference" => $resp->reference,
+                    "quantity" => $resp->qtd_separada_recente,
+                    "type" => $resp->tipo,
+                    "location" => "",
+                    "nif" => $this->nifNumber
+                ];
+        
+        
+                // $curl = curl_init();
+        
+                // curl_setopt_array($curl, array(
+                //     CURLOPT_URL => 'http://phc.brvr.pt:25002/moviments/dispatch',
+                //     CURLOPT_RETURNTRANSFER => true,
+                //     CURLOPT_ENCODING => '',
+                //     CURLOPT_MAXREDIRS => 10,
+                //     CURLOPT_TIMEOUT => 0,
+                //     CURLOPT_FOLLOWLOCATION => true,
+                //     CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                //     CURLOPT_CUSTOMREQUEST => 'POST',
+                //     CURLOPT_POSTFIELDS => json_encode($arraySend),
+                //     CURLOPT_HTTPHEADER => array(
+                //         'Content-Type: application/json'
+                //     ),
+                // ));
+        
+                // $response = curl_exec($curl);
+        
+                // curl_close($curl);
                
                 
             }     
+
+
+            //Executar aqui e enviar para a API do Sergio
+
+            $curl = curl_init();
+        
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => 'http://phc.brvr.pt:25002/moviments/dispatch',
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'POST',
+                CURLOPT_POSTFIELDS => json_encode($arraySend),
+                CURLOPT_HTTPHEADER => array(
+                    'Content-Type: application/json'
+                ),
+            ));
+    
+            $response = curl_exec($curl);
+    
+            curl_close($curl);
             
-            // MovimentosStockTemporary::where('Tipo','Entrada')->delete();
+    
+            MovimentosStock::where('nr_encomenda',$orderNumber)->where('tipo','Saida')->delete();
+            MovimentosStockTemporary::where('nr_encomenda',$orderNumber)->where('tipo','Saida')->delete();
+            
          
         }
 

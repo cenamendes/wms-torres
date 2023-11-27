@@ -341,6 +341,7 @@ class ShowRececaoDetail extends Component
             {
                 $mov = $this->generateRandomString(8);
 
+
                 MovimentosStock::create([
                     "id_movimento" => $mov,
                     "nr_encomenda" => $resp->nr_encomenda,
@@ -371,8 +372,39 @@ class ShowRececaoDetail extends Component
                     ->with('status', 'error');
                 }
                
+                $enc = Encomendas::where('numero_encomenda',strtok($resp->nr_encomenda, '|'))->first();
 
-               
+                $arraySend = [
+                    "order_number" => $resp->nr_encomenda,
+                    "barcode" => $resp->cod_barras,
+                    "reference" => $resp->reference,
+                    "quantity" => $resp->qtd_separada_recente,
+                    "type" => $resp->tipo,
+                    "location" => $resp->localizacao,
+                    "nif" => $enc->nif_fornecedor
+                ];
+
+
+                $curl = curl_init();
+
+                curl_setopt_array($curl, array(
+                    CURLOPT_URL => 'http://phc.brvr.pt:25002/moviments/entry',
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_ENCODING => '',
+                    CURLOPT_MAXREDIRS => 10,
+                    CURLOPT_TIMEOUT => 0,
+                    CURLOPT_FOLLOWLOCATION => true,
+                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                    CURLOPT_CUSTOMREQUEST => 'POST',
+                    CURLOPT_POSTFIELDS => json_encode($arraySend),
+                    CURLOPT_HTTPHEADER => array(
+                        'Content-Type: application/json'
+                    ),
+                ));
+    
+                $response = curl_exec($curl);
+    
+                curl_close($curl);
                 
             }     
             

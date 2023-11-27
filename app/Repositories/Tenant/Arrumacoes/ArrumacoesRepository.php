@@ -71,10 +71,16 @@ class ArrumacoesRepository implements ArrumacoesInterface
                     
                         $response_decoded = json_decode($response);
 
-                      
                        
-                       
-                        $soma = $soma - $response_decoded->ordered;
+                       if(!isset($response_decoded->ordered))
+                       {
+                            $soma = $soma;
+                       }
+                       else
+                       {
+                            $soma = $soma - $response_decoded->ordered;
+                       }
+                        
                         
                         // if( $soma > $response_decoded->stock)
                         // {

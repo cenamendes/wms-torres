@@ -103,7 +103,7 @@
             @php
                 $count = -1;
             @endphp
-     
+
             @foreach ($encomendaDetail as $i => $impr)
                 
                    {{-- @php
@@ -129,7 +129,7 @@
 
               
 
-                        <tr style="text-align:center;">
+                        <tr style="text-align:center;background: {{ $impr->color }};color:black;font-weight:bolder;">
                             <td style="padding-bottom:30px;"><br><span>{{ $impr->reference }}</span></td>
                             <td style="padding-bottom:30px;"><br><span style="padding-right: 5px;padding-left: 5px;">{{ $impr->description }}</span></td>
                             {{-- <td style="padding-bottom:30px;"><br><span style="padding-right: 5px;padding-left: 5px;">{{ $soma }}</span></td> --}}
