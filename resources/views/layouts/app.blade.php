@@ -5,17 +5,17 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'Idyall') }}</title>
+        <title>{{ config('app.name', 'Boxpt') }}</title>
 
         <!-- Fonts -->
-        <link rel="stylesheet" href="https://fonts.bunny.net/css2?family=Nunito:wght@400;600;700&display=swap">
-        <link rel="icon" type="image/png" sizes="16x16" href="{{ 'public/assets/resources/images/logo.png' }}">
+        <link href="https://fonts.cdnfonts.com/css/syfy-fantasy" rel="stylesheet">
+        <link rel="icon" type="image/png" sizes="16x16" href="{{ 'public/assets/resources/images/logo_png_boxpt.png' }}">
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100">
+        <div class="min-h-screen">
             @include('layouts.navigation')
 
             <!-- Page Heading -->
@@ -32,6 +32,6 @@
         </div>
 
         @stack('custom-scripts')
-       
+
     </body>
 </html>

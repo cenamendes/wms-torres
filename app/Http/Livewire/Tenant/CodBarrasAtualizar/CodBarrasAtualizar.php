@@ -46,15 +46,18 @@ class CodBarrasAtualizar extends Component
             $result = $this->codbarrasRepository->getCodBarrasInformation($this->codbarras);
         }
 
-        if($result->reference == null){
+        if(isset($result))
+        {
+            if($result->reference == null){
 
-            $this->dispatchBrowserEvent('swalFire', ['title' => "Scan Código de Barras", 'message' => "Esse código de barras não existe.", 'status' => 'error']);
-        } else {
-          
-            $this->descricao = $result->description;
+                $this->dispatchBrowserEvent('swalFire', ['title' => "Scan Código de Barras", 'message' => "Esse código de barras não existe.", 'status' => 'error']);
+            } else {
+
+                $this->descricao = $result->description;
+            }
+
         }
-        
-        
+
 
     }
 

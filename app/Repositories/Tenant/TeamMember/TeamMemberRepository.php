@@ -69,7 +69,7 @@ class TeamMemberRepository implements TeamMemberInterface
                 "username" => $request->username,
                 "email" => $request->email
             ]);
-            
+
 
             return $teamMember;
         });
@@ -84,7 +84,7 @@ class TeamMemberRepository implements TeamMemberInterface
             {
                 User::where('id', $teamMember->user_id)->delete();
             }
-            
+
             $teamMember->delete();
 
             return $teamMember;
@@ -98,7 +98,7 @@ class TeamMemberRepository implements TeamMemberInterface
            $hashed_password = Hash::make($password);
 
            $teamMember = TeamMember::where('id',$teamMember)->first();
-           
+
         //$checkIfUserExist = User::where('email',$teamMember->email)->first();
 
         //    if(empty($checkIfUserExist))
@@ -119,7 +119,7 @@ class TeamMemberRepository implements TeamMemberInterface
         //         $userCreate["user"] = ['password_without_hashed' => $password];
 
         //    }
-        //    else 
+        //    else
         //    {
         //         $userCreate = User::create([
         //             'name' => $teamMember->name,
@@ -128,7 +128,7 @@ class TeamMemberRepository implements TeamMemberInterface
         //             'type_user' => '1',
         //             'password' => $hashed_password,
         //         ]);
-                
+
         //    }
 
 

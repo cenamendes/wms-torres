@@ -34,7 +34,7 @@ class AlertsEmails extends Command
      */
     public function handle()
     {
-       
+
         tenancy()->runForMultiple(null, function (Tenant $tenant) {
             //$customersServices = CustomerServices::where('end_date','>=',date('Y-m-d'))->with('service')->with('customer')->with('customerLocation')->get();
             $customersServices = CustomerServices::with('service')->with('customer')->with('customerLocation')->get();
@@ -59,14 +59,14 @@ class AlertsEmails extends Command
                     {
                         $subtract_actual = $customer->number_times - 1;
                         CustomerServices::where('id',$customer->id)->update(["number_times" => $subtract_actual, "new_date" => date('Y-m-d')]);
-                    
+
                         event(new AlertEvent($customer));
                     }
                 }
             }
         });
         \Log::info("Cron is working fine!");
-        
+
         //return Command::SUCCESS;
     }
 }

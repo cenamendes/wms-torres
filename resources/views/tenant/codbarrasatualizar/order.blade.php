@@ -27,7 +27,7 @@
         </div>
     </div>
 </x-tenant-layout>
-<script> 
+<script>
 
     window.addEventListener('planning',function(e){
         var arrayPosition = [];
@@ -35,14 +35,14 @@
          jQuery('.dd-handle').each(function(i, obj) {
             var arrayPlan = {};
             var abreviatura = jQuery(this).find(".abreviatura").val();
-          
+
             arrayPlan.abreviatura = abreviatura;
 
             arrayPosition.push(arrayPlan);
         });
 
          Livewire.emit("sendChangesPlanning",arrayPosition)
-    
+
     });
 
 

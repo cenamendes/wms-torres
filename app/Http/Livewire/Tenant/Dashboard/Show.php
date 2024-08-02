@@ -19,7 +19,7 @@ use App\Interfaces\Tenant\CustomerNotification\CustomerNotificationInterface;
 class Show extends Component
 {
     use WithPagination;
-    
+
     public int $perPage;
     public int $perPage2;
     public string $searchString = '';
@@ -50,13 +50,13 @@ class Show extends Component
         session()->put('perPage', $this->perPage);
     }
 
-    
+
     public function updatedSearchString(): void
     {
         $this->resetPage();
     }
 
-   
+
     public function paginationView()
     {
         return 'tenant.livewire.setup.pagination';
@@ -75,7 +75,7 @@ class Show extends Component
 
     }
 
-    
+
     public function render()
     {
 

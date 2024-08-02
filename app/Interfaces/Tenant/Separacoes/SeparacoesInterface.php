@@ -8,7 +8,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 interface SeparacoesInterface
 {
-    
+
     /** Arrumacoes */
 
     public function getEncomendasSeparacoes($perPage): LengthAwarePaginator;

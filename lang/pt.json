@@ -636,12 +636,12 @@
     "List Budget Request": "Listagem Pedidos Orçamento",
     "Edit Budget Request": "Editar Pedidos Orçamento",
     "New Budget Request": "Novo Pedido Orçamento",
-    
+
     "New Budget Received": "Novo Orçamento Recebido",
     "Edit Budget Received": "Editar Orçamento Recebido",
     "List Budget Received": "Listar Orçamento Recebido",
     "List Supplier Documents": "Listar Documentos de Fornecedor",
-    
+
     "Quantity": "Quantidade",
     "Price": "Preço",
 
@@ -669,11 +669,9 @@
 
     "Types": "Tipos",
     "Work Stations": "Centros de Trabalho",
-    "Work Stations Times": "Tempos Centros de Trabalho"
-
-
-
-
+    "Work Stations Times": "Tempos Centros de Trabalho",
+    "Warehouses": "Armazéns",
+    "Exit location": "Localização de saida"
 
 }
 

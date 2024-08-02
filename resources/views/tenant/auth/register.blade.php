@@ -11,7 +11,7 @@
                     <div class="auth-form">
                         <div class="text-center mb-3">
                             <a href="{!! url('/') !!}"><img
-                                    src="{!! "http://".$_SERVER['SERVER_NAME']."/assets/resources/images/logo.png" !!}" alt="" style="width:20%;"></a>
+                                    src="{!! "http://".$_SERVER['SERVER_NAME']."/assets/resources/images/logo_png_boxpt.png" !!}" alt="" style="width:20%;"></a>
                         </div>
                         <input type="hidden" id="messageSwal" value="{!!$errors!!}">
                         <h4 class="text-center mb-4 text-white">Registe a sua conta</h4>
@@ -105,25 +105,25 @@
 
 
     <div class="erros">
-       
+
         @if ($errors->any())
             <script>
                 let status = '';
                 let message = '';
 
                 status = 'error';
-            
+
                 @php
-                
+
                 $allInfo = '';
 
                 foreach ($errors->all() as $err )
                 {
                    $allInfo .= $err."<br>";
                 }
-                                     
+
                 $message = $allInfo;
-                   
+
                 @endphp
                 message = '{!! $message !!}';
             </script>

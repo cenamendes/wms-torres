@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Config extends Model
 {
     use HasFactory;
-    protected $fillable = ['company_name', 'vat', 'contact', 'email','alert_email' ,'address', 'logotipo', 'sender_email', 'sender_name', 'sender_cc_email', 'sender_cc_name', 'sender_bcc_email', 'sender_bcc_name', 'signature','user_id','cod_barras_accept','reference_accept'];
+    protected $fillable = ['company_name', 'vat', 'contact', 'email','alert_email' ,'address', 'logotipo', 'sender_email', 'sender_name', 'sender_cc_email', 'sender_cc_name', 'sender_bcc_email', 'sender_bcc_name', 'signature','user_id','cod_barras_accept','reference_accept','scan_accept','report_email'];
     protected $table = 'config';
 
 }

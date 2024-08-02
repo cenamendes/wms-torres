@@ -46,7 +46,7 @@ class LoginRequest extends FormRequest
     public function authenticate()
     {
         $user = User::where('username',$this->username)->first();
-       
+
         if(isset($user->id))
         {
             $customer_user = Customers::where('user_id',$user->id)->first();
@@ -60,7 +60,7 @@ class LoginRequest extends FormRequest
                 }
             }
         }
-        
+
 
         $this->ensureIsNotRateLimited();
         if (! Auth::attempt($this->only('username', 'password'), $this->boolean('remember'))) {

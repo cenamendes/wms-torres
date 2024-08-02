@@ -8,7 +8,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 interface TransferenciasInterface
 {
-    
+
     public function getTransferenciasCollection(): array;
 
     public function getCodBarrasCollection(): array;

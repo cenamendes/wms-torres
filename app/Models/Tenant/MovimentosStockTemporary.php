@@ -11,7 +11,7 @@ class MovimentosStockTemporary extends Model
     use HasFactory;
 
     protected $table = 'movimentos_stock_temporaria';
-    protected $fillable = ['id_movimento','nr_encomenda','cod_barras','reference','qtd_inicial','qtd_separada','qtd_separada_recente','tipo','localizacao','concluded_movement'];
+    protected $fillable = ['numero_encomenda','id_line','document', 'referencia', 'barcode', 'descricao', 'qtd_registrada','internal_notes','stock','warehouse', 'created_at', 'updated_at'];
 
     protected static function booted()
     {

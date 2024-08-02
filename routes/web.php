@@ -3,7 +3,6 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -18,6 +17,7 @@ use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 Route::get('/', function () {
     return view('welcome');
 });
+
 
 // Route::get('/foo', function () {
 //     return view('welcome');

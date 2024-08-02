@@ -22,25 +22,25 @@
         </div>
     </div>
     <div class="erros">
-       
+
         @if ($errors->any())
             <script>
                 let status = '';
                 let message = '';
 
                 status = 'error';
-            
+
                 @php
-                
+
                 $allInfo = '';
 
                 foreach ($errors->all() as $err )
                 {
                    $allInfo .= $err."<br>";
                 }
-                                     
+
                 $message = $allInfo;
-                   
+
                 @endphp
                 message = '{!! $message !!}';
             </script>

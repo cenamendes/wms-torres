@@ -33,9 +33,9 @@
                     </div>
                   </div>
                 </div>
-                
+
                 <!-- row -->
-                
+
                 @livewire('tenant.dashboard.show')
 
                 <div class="modal fade" id="modalInfo" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -48,7 +48,7 @@
                         </button>
                       </div>
                       <div class="modal-body">
-                       
+
                       </div>
                       <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
@@ -56,7 +56,7 @@
                     </div>
                   </div>
                 </div>
-                
+
               {{-- </div> --}}
         </div>
     </div>
@@ -86,9 +86,9 @@ var colors = [];
 
 window.addEventListener('updateGraph',function(e){
   jQuery("#donutChartt").empty();
-  
+
   jQuery("#revenue").empty();
- 
+
 
   if(e.detail.function == "muda")
   {
@@ -99,7 +99,7 @@ window.addEventListener('updateGraph',function(e){
   {
 	jQuery("#selectMonthGraph").val(new Date().getFullYear()).change();
   }
-  
+
 
 
   values = [];
@@ -111,7 +111,7 @@ window.addEventListener('updateGraph',function(e){
          return [value];
  });
 
-  
+
   var numberOfCustomers = jQuery("#numberOfCustomers").val();
 
     for(i=1;i<=numberOfCustomers;i++)
@@ -122,26 +122,26 @@ window.addEventListener('updateGraph',function(e){
 
   setTimeout(function(){
 			dzChartlist.load();
-		}, 1000); 
+		}, 1000);
 
 });
 
 
 var dzChartlist = function(){
- 
+
 	let draw = Chart.controllers.line.__super__.draw; //draw shadow
 	var screenWidth = jQuery(window).width();
 	var donutChart = function(){
-  
-    var valuesCommaRemoved = values.join(','); 
-    
+
+    var valuesCommaRemoved = values.join(',');
+
 		var options = {
           series: valuesCommaRemoved.split(',').map(Number),
           chart: {
           type: 'donut',
         },
 		  legend:{
-			show:false  
+			show:false
 		  },
 		  plotOptions: {
 			 pie: {
@@ -152,7 +152,7 @@ var dzChartlist = function(){
 			 },
 		  },
 		  stroke:{
-			width:'10'  
+			width:'10'
 		  },
 		  dataLabels: {
 			  formatter(val, opts) {
@@ -169,7 +169,7 @@ var dzChartlist = function(){
 			},
 		  colors: colors,
       tooltip: {
-   
+
   }
 
   };
@@ -186,7 +186,7 @@ var dzChartlist = function(){
 					}
 				];
 				revenue.height = 300;
-				
+
 				var config = {
 					type: "line",
 					data: {
@@ -211,7 +211,7 @@ var dzChartlist = function(){
 								borderColor: 'rgba(0, 126, 236, 0.8)',
 								borderWidth: "8",
 								backgroundColor: 'rgba(152, 205, 251, 0.8)'
-								
+
 							}
 						]
 					},
@@ -224,7 +224,7 @@ var dzChartlist = function(){
 								}
 						},
 						legend:false,
-						
+
 						scales: {
 							yAxes: [{
 								gridLines: {
@@ -264,7 +264,7 @@ var dzChartlist = function(){
 							caretSize: 6,
 							caretPadding: 10
 						}
-                   
+
 					}
 				};
 
@@ -273,7 +273,7 @@ var dzChartlist = function(){
 				var myLine = new Chart(ctx, config);
 
 				var items = document.querySelectorAll("#sales-revenue .nav-tabs .nav-item");
-	
+
 				items.forEach(function(item, index) {
 					item.addEventListener("click", function() {
 						config.data.datasets[0].data = activityData[index].first;
@@ -290,22 +290,22 @@ var dzChartlist = function(){
 		return {
 			init:function(){
 			},
-			
-			
+
+
 			load:function(){
 				donutChart();
         		revenueChart();
 			},
-			
+
 			resize:function(){
-				
+
 			}
 		}
-	
+
 	}();
 
 
-  
+
 
   jQuery(document).ready(function(){
 
@@ -320,18 +320,18 @@ var dzChartlist = function(){
        values.push(jQuery("#testeID"+i).attr("data-value"));
        colors.push(jQuery("#testeID"+i).attr("data-color"));
     }
-   
+
 	});
-		
+
 	jQuery(window).on('load',function(){
 		setTimeout(function(){
 			dzChartlist.load();
-		}, 1000); 
-		
+		}, 1000);
+
 	});
- 
- 
-   
-    
-</script>   
+
+
+
+
+</script>
 {{-- @endpush --}}

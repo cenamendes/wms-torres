@@ -9,9 +9,9 @@
     <title>{{ config('dz.name') }} | {{ $attributes['title'] }}</title>
     <meta name="description" content="@yield('page_description', $page_description ?? '')">
     <!-- Favicon icon -->
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ global_asset('storage/resources/images/logo.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ global_asset('storage/resources/images/logo_png_boxpt.png') }}">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&family=Roboto:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous"></script> 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous"></script>
 
 	@if(!empty(config('dz.public.pagelevel.css.'.$attributes['themeAction'])))
 		@foreach(config('dz.public.pagelevel.css.'.$attributes['themeAction']) as $style)
@@ -54,7 +54,7 @@
     ***********************************-->
     <div id="main-wrapper">
         <div class="nav-header">
-            <a href="{{ route('tenant.dashboard') }}" class="brand-logo">
+            <a href="{{ route('tenant.entrada') }}" class="brand-logo">
             @php
                 $config_user = \App\Models\Tenant\Config::first();
             @endphp
@@ -72,7 +72,7 @@
             </a>
             <div class="nav-control">
                 <div class="hamburger">
-                    <span class="line"></span><span class="line"></span><span class="line"></span>
+                    <span class="line" style="background:black !important;"></span><span class="line" style="background:black !important;"></span><span class="line" style="background:black !important;"></span>
                 </div>
             </div>
         </div>

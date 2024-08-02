@@ -69,7 +69,7 @@ class ExportTasksExcel implements FromCollection, WithHeadings, WithEvents,Shoul
 
         )->getFont()->setBold(true);
 
-       
+
 
         $sheet->getStyle("A1:I1")->applyFromArray(
             array(
@@ -81,11 +81,11 @@ class ExportTasksExcel implements FromCollection, WithHeadings, WithEvents,Shoul
                   'color' => ['argb' => 'FFFFFF']
                ),
                'alignment' => array(
-                  'horizontal' => "center", 
+                  'horizontal' => "center",
                )
             )
         )->getFont()->setBold(true);
-        
+
     }
 
 
@@ -109,7 +109,7 @@ class ExportTasksExcel implements FromCollection, WithHeadings, WithEvents,Shoul
             }
 
             $teamMember = User::where('id',$analysis["tech_id"])->first();
-           
+
             return [
                 'reference' => $analysis["tasks_reports"]["reference"],
                 'stateOfTask' => $type,

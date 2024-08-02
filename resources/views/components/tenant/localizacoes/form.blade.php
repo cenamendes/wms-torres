@@ -11,7 +11,7 @@
                         @else
                           @method('POST')
                         @endif
-                        
+
                         <div class="row">
                             <div class="form-group row">
                                 <section class="col-xl-12 col-xs-12">
@@ -32,7 +32,7 @@
                                 </section>
                                 <section class="col-xl-12 col-xs-12">
                                     <label>{{ __('Relativo a Stock') }} </label>&nbsp;
-                                 
+
                                     <input type="checkbox" name="local_stock" id="local_stock" @if(isset($abreviatura)) @if($localstock == "1") checked @endif @endif>
                                 </section>
                             </div>
@@ -47,12 +47,12 @@
     <div class="card-footer justify-content-between">
         <div class="row">
             <div class="col text-right">
-               
+
                 <a href="{{ route('tenant.locations.index') }}" class="btn btn-secondary mr-2">{{
                     __('Back') }}
                     <span class="btn-icon-right"><i class="las la-angle-double-left"></i></span>
                 </a>
-             
+
                 <button type="submit" style="border:none;background:none;">
                     <a type="submit" class="btn btn-primary"  role="button">
                         {{ $buttonAction }}

@@ -13,7 +13,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
-    
+
 
     /**
      * The attributes that are mass assignable.
@@ -26,6 +26,8 @@ class User extends Authenticatable
         'email',
         'type_user',
         'photo',
+        'authstock',
+        'loginarmazem',
         'online',
         'password',
         'last_seen'
@@ -36,7 +38,7 @@ class User extends Authenticatable
         return $this->hasOne(TeamMember::class, 'user_id', 'id');
     }
 
-    
+
     /**
      * The attributes that should be hidden for serialization.
      *
